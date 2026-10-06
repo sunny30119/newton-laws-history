@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>牛頓運動定律的演變與思維革命史（全螢幕大畫布互動版）</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    html { scroll-behavior: smooth; }
+    .sim-canvas {
+      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #020617 100%);
+      border: 1px solid #1e293b;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+      border-radius: 0.875rem;
+      width: 100%;
+      display: block;
+    }
+    .mjx-chtml { font-size: 110% !important; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white pb-24">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/85 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <i data-lucide="orbit" class="w-7 h-7 text-indigo-400"></i>
+        <span class="font-bold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">
+          經典力學思維實驗室
+        </span>
+      </div>
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+        <a href="#law1" class="hover:text-indigo-400 transition-colors">第一定律（慣性）</a>
+        <a href="#law2" class="hover:text-indigo-400 transition-colors">第二定律（力與加速度）</a>
+        <a href="#law3" class="hover:text-indigo-400 transition-colors">第三定律（作用反作用）</a>
+        <a href="#summary" class="hover:text-indigo-400 transition-colors">思維大跨越</a>
+      </nav>
+      <button onclick="window.print()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+        <i data-lucide="printer" class="w-4 h-4"></i> 列印 / 存為 PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-16 pb-12 text-center border-b border-slate-800 bg-gradient-to-b from-indigo-950/40 to-slate-950 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 mb-4">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 超大寬幅物理模擬器 ｜ 深度思維演變
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-4 leading-tight">
+        牛頓三大運動定律：<br>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-pink-400">
+          科學家思維演變與大畫布互動模擬
+        </span>
+      </h1>
+      <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+        每一張卡片均配備寬幅高解析度互動實驗，親手操作前人的思想實驗，看見思維典範如何一步步被推翻與重建。
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-12 space-y-24">
+
+    <!-- ======================================================== -->
+    <!-- LAW 1: INERTIA -->
+    <!-- ======================================================== -->
+    <section id="law1" class="scroll-mt-20">
+      <div class="border-b border-slate-800 pb-4 mb-8 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center border border-indigo-500/30 text-lg">1</div>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">第一運動定律：慣性與參考系的建立</h2>
+          <p class="text-sm text-slate-400 mt-0.5">$$\sum \vec{F} = 0 \implies \vec{v} = \text{常數}$$（力是改變狀態的原因，不是維持運動的原因）</p>
+        </div>
+      </div>
+
+      <div class="space-y-12">
+
+        <!-- 1.1 Aristotle -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-amber-400">1. 亞里斯多德（Aristotle，前4世紀）——「力是維持運動的原因」</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">經驗直覺</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維脈絡：</strong>地表萬物天然傾向「靜止」。物體要動，必須持續有外力推動；推力一旦消失，物體就該立刻停下。
+          </p>
+
+          <!-- Interactive Sim 1 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-sm font-bold text-indigo-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 亞里斯多德推木塊實驗</span>
+              <span id="sim1-status" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400">狀態：靜止 (F=0)</span>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-aristotle" width="900" height="220" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-aristotle-push" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-amber-900/40">
+                <i data-lucide="hand" class="w-4 h-4"></i> 按住持續施加推力（放開即驟停）
+              </button>
+              <span class="text-xs text-slate-400">請按住按鈕體驗：在亞里斯多德的視角中，一放開手推力為零，速度瞬間歸零。</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div class="p-4 bg-red-950/30 border border-red-900/40 rounded-xl">
+              <div class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4"></i> 盲區破綻</div>
+              <p class="text-slate-300 leading-relaxed"><strong>拋體矛盾：</strong>手扔出石頭後，手已不再施力，石頭為什麼還能在空中飛行？（亞里斯多德硬補丁說空氣跑到後方推動，但空氣明明是阻力）。</p>
+            </div>
+            <div class="p-4 bg-emerald-950/30 border border-emerald-900/40 rounded-xl">
+              <div class="font-bold text-emerald-400 mb-1.5 flex items-center gap-1.5"><i data-lucide="lightbulb" class="w-4 h-4"></i> 思考轉向</div>
+              <p class="text-slate-300 leading-relaxed">物體維持飛行根本不需要外在介質持續在背後推動！</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.2 Impetus (Fixed & Large) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-sky-400">2. 布里丹（Jean Buridan，14世紀）——「中世紀衝力說」</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">內在燃料假說</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維脈絡：</strong>投擲時，人把一種名為「衝力（Impetus）」的性質注入物體內部。物體靠體內殘留的衝力前進，衝力隨時間與阻力逐漸耗盡，最後垂直墜地。
+          </p>
+
+          <!-- Interactive Sim 2 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+              <span class="text-sm font-bold text-sky-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 衝力消耗砲彈飛行模擬（完整大畫布）</span>
+              <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+                <span class="text-xs text-slate-300 font-mono">衝力儲備 (Impetus):</span>
+                <div class="w-32 bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                  <div id="impetus-bar" class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full w-full rounded-full transition-all duration-75"></div>
+                </div>
+                <span id="impetus-num" class="text-xs font-mono font-bold text-sky-400">100%</span>
+              </div>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-impetus" width="900" height="300" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-impetus-fire" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-sky-900/40">
+                <i data-lucide="zap" class="w-4 h-4"></i> 發射砲彈（注入衝力）
+              </button>
+              <span class="text-xs text-slate-400">觀察中世紀軌跡：起初直線飛行，衝力逐漸耗盡後，突然轉為直線垂直下墜。</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div class="p-4 bg-red-950/30 border border-red-900/40 rounded-xl">
+              <div class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4"></i> 盲區破綻</div>
+              <p class="text-slate-300 leading-relaxed">把運動當作一種會「自行衰竭耗盡」的內部燃料，依然沒有擺脫「運動需要維持代價」的錯誤直覺。</p>
+            </div>
+            <div class="p-4 bg-emerald-950/30 border border-emerald-900/40 rounded-xl">
+              <div class="font-bold text-emerald-400 mb-1.5 flex items-center gap-1.5"><i data-lucide="lightbulb" class="w-4 h-4"></i> 思考轉向</div>
+              <p class="text-slate-300 leading-relaxed">物體減速不是因為「內部能量耗盡」，而是因為受到了外在「摩擦阻力」的剝奪！</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.3 Galileo -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-indigo-400">3. 伽利略（Galileo，1632年）——「雙斜面理想實驗」</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">理想化無摩擦</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維脈絡：</strong>小球從小斜面滾下，會爬上對面等高的斜面。如果將對面斜面逐漸放平至水平，小球為了達到等高，將在無摩擦平面上<strong>永遠等速前進</strong>！
+          </p>
+
+          <!-- Interactive Sim 3 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+              <span class="text-sm font-bold text-indigo-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 伽利略雙斜面互動實驗</span>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-400">切換右側斜面角度：</span>
+                <button onclick="setGalileoAngle(45)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700">45° (陡峭)</button>
+                <button onclick="setGalileoAngle(18)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700">18° (平緩)</button>
+                <button onclick="setGalileoAngle(0)" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-900/50">0° (完全水平-永不停止)</button>
+              </div>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-galileo" width="900" height="260" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-galileo-release" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-indigo-900/40">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> 釋放小球滾動
+              </button>
+              <span class="text-xs text-slate-400">當切換為 0° 完全水平時，小球為追求等高而在平面上等速永恆滾動。</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div class="p-4 bg-red-950/30 border border-red-900/40 rounded-xl">
+              <div class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4"></i> 盲區破綻</div>
+              <p class="text-slate-300 leading-relaxed"><strong>圓周慣性執念：</strong>伽利略為解釋地球自轉，誤以為自然無阻礙運動是繞著地心的「圓周運動」。</p>
+            </div>
+            <div class="p-4 bg-emerald-950/30 border border-emerald-900/40 rounded-xl">
+              <div class="font-bold text-emerald-400 mb-1.5 flex items-center gap-1.5"><i data-lucide="lightbulb" class="w-4 h-4"></i> 思考轉向（笛卡兒與牛頓）</div>
+              <p class="text-slate-300 leading-relaxed">圓周運動方向一直在變，必須受到向心力；最純粹的無外力幾何運動只能是<strong>「直線」</strong>。</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- LAW 2: F = ma -->
+    <!-- ======================================================== -->
+    <section id="law2" class="scroll-mt-20">
+      <div class="border-b border-slate-800 pb-4 mb-8 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center border border-sky-500/30 text-lg">2</div>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">第二運動定律：力與加速度的定量因果</h2>
+          <p class="text-sm text-slate-400 mt-0.5">$$\vec{F} = \frac{d\vec{p}}{dt} = m\vec{a}$$（力是動量變化率，引起加速度而非速度）</p>
+        </div>
+      </div>
+
+      <div class="space-y-12">
+
+        <!-- 2.1 Aristotle vs Galileo Falling -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-sky-400">1. 自由落體大對決：亞里斯多德（$F \propto v$） vs 伽利略（$v \propto t$）</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">落體運動學</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維衝突：</strong>如果重力產生的是固定速度（亞里斯多德），蘋果下落將是等速的；但伽利略透過實驗證明，恆定的重力產生的是<strong>「等加速度」</strong>，下落距離與時間平方成正比（$s \propto t^2$）！
+          </p>
+
+          <!-- Interactive Sim 4 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-sm font-bold text-sky-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 自由落體下落頻閃攝影對照</span>
+              <div class="flex gap-4 text-xs font-mono">
+                <span class="text-amber-400 flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> 亞里斯多德（等速下落 $v=\text{常數}$）</span>
+                <span class="text-sky-400 flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> 伽利略（等加速下落 $s \propto t^2$）</span>
+              </div>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-falling" width="900" height="320" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-falling-drop" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-sky-900/40">
+                <i data-lucide="arrow-down" class="w-4 h-4"></i> 同時釋放雙球下落
+              </button>
+              <span class="text-xs text-slate-400">觀察頻閃殘影：右邊等加速小球間隔越來越大，徹底推翻左側等距等速模型。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.2 Huygens Circular Motion -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-teal-400">2. 惠更斯（Huygens，1673年）——「向心加速度與離心力」</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-teal-500/10 text-teal-300 border border-teal-500/20">向心幾何定量</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維突破：</strong>即便轉動速率不變，只要方向改變就是加速！惠更斯推導出向心加速度 $a = \frac{v^2}{r}$。若剪斷繩子，小球會沿<strong>切線方向直線飛出</strong>（直線慣性證明）。
+          </p>
+
+          <!-- Interactive Sim 5 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-sm font-bold text-teal-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 旋轉圓周與剪斷繩子模擬</span>
+              <span id="huygens-status" class="text-xs text-slate-300 font-mono px-2.5 py-1 rounded bg-slate-900 border border-slate-800">向心拉力作用中</span>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-huygens" width="900" height="300" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-huygens-cut" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-rose-900/40">
+                <i data-lucide="scissors" class="w-4 h-4"></i> 剪斷繩子（向心力歸零）
+              </button>
+              <button id="btn-huygens-reset" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded-xl transition">
+                重置旋轉
+              </button>
+              <span class="text-xs text-slate-400">剪斷瞬間向心力為 0，小球立即沿切線等速直線飛離。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.3 Newton F=ma -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-sky-400">3. 牛頓（Newton，1687年）——「第二定律微積分定量：$F = ma$」</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">動力學大一統</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>集大成：</strong>質量 $m$ 是阻礙改變的慣性量度，力 $F$ 是動量變化率。動態調整推力與質量，直接查看加速度與速度即時變化。
+          </p>
+
+          <!-- Interactive Sim 6 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-sm">
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label class="text-slate-300 font-medium">外力 $F$ (推力):</label>
+                  <span id="val-f" class="text-sky-400 font-mono font-bold text-base">25 N</span>
+                </div>
+                <input id="slider-f" type="range" min="5" max="60" value="25" class="w-full accent-sky-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label class="text-slate-300 font-medium">質量 $m$ (小車負載):</label>
+                  <span id="val-m" class="text-amber-400 font-mono font-bold text-base">5 kg</span>
+                </div>
+                <input id="slider-m" type="range" min="1" max="10" value="5" class="w-full accent-amber-500 h-2 bg-slate-800 rounded-lg cursor-pointer">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mb-4">
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                <div class="text-xs text-slate-400 mb-0.5">外力 $F$</div>
+                <div id="box-f" class="text-base font-mono font-bold text-sky-400">25 N</div>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                <div class="text-xs text-slate-400 mb-0.5">質量 $m$</div>
+                <div id="box-m" class="text-base font-mono font-bold text-amber-400">5 kg</div>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                <div class="text-xs text-slate-400 mb-0.5">加速度 $a = F/m$</div>
+                <div id="val-a" class="text-base font-mono font-bold text-emerald-400">5.00 m/s²</div>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                <div class="text-xs text-slate-400 mb-0.5">即時速度 $v$</div>
+                <div id="val-v" class="text-base font-mono font-bold text-indigo-400">0.00 m/s</div>
+              </div>
+            </div>
+
+            <!-- Large Canvas -->
+            <canvas id="canvas-fma" width="900" height="200" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-fma-run" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-sky-900/40">
+                <i data-lucide="play" class="w-4 h-4"></i> 開始加速賽跑
+              </button>
+              <button id="btn-fma-reset" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded-xl transition">
+                重置
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- LAW 3: ACTION & REACTION -->
+    <!-- ======================================================== -->
+    <section id="law3" class="scroll-mt-20">
+      <div class="border-b border-slate-800 pb-4 mb-8 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 font-bold flex items-center justify-center border border-pink-500/30 text-lg">3</div>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">第三運動定律：雙向交互作用與系統守恆</h2>
+          <p class="text-sm text-slate-400 mt-0.5">$$\vec{F}_{AB} = -\vec{F}_{BA}$$（力是成對出現的關係，導出系統動量守恆）</p>
+        </div>
+      </div>
+
+      <div class="space-y-12">
+
+        <!-- 3.1 Skaters -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-pink-400">1. 冰面推人實驗：單向主客體盲區 vs 雙向對稱作用</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-pink-500/10 text-pink-300 border border-pink-500/20">力的雙向性</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維突破：</strong>古人認為 A 推 B 是單向的。但在光滑冰面上，A 用力推 B，A 自己也必然受到等大反向的力而向後滑行！
+          </p>
+
+          <!-- Interactive Sim 7 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-sm font-bold text-pink-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 冰面推人互動模擬</span>
+              <div class="flex gap-4 text-xs font-mono">
+                <span class="text-indigo-400">滑冰者 A (60kg)</span>
+                <span class="text-pink-400">滑冰者 B (60kg)</span>
+              </div>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-skaters" width="900" height="220" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-skaters-push" class="px-5 py-2.5 bg-pink-600 hover:bg-pink-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-pink-900/40">
+                <i data-lucide="users" class="w-4 h-4"></i> A 用力推 B 一把
+              </button>
+              <button id="btn-skaters-reset" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded-xl transition">
+                重置站立
+              </button>
+              <span class="text-xs text-slate-400">觀察推開瞬間力的箭頭完全對稱（$\vec{F}_{AB} = -\vec{F}_{BA}$），兩人同時反向滑開。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.2 Royal Society Elastic Collision -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-purple-400">2. 1668 皇家學會碰撞大賽：向量動量守恆</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">碰撞衝量對稱</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>思維突破：</strong>笛卡兒忽略速度方向（純量計算）導致碰撞規則崩潰；沃利斯、雷恩與惠更斯引入向量，證實 A 撞 B 時，A 給 B 多少衝量，B 就反向給 A 多少衝量（$\Delta \vec{p}_A = -\Delta \vec{p}_B$）。
+          </p>
+
+          <!-- Interactive Sim 8 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-sm font-bold text-purple-300 flex items-center gap-1.5"><i data-lucide="play" class="w-4 h-4"></i> 彈性碰撞動量轉移模擬</span>
+              <span id="collision-momentum" class="text-xs font-mono text-slate-300 px-3 py-1 rounded bg-slate-900 border border-slate-800">總動量 $P_{\text{總}} = 20.0\text{ kg}\cdot\text{m/s}$ (守恆)</span>
+            </div>
+            <!-- Large Canvas -->
+            <canvas id="canvas-collision" width="900" height="200" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center gap-4">
+              <button id="btn-collision-start" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-purple-900/40">
+                <i data-lucide="play" class="w-4 h-4"></i> 發射 A 球對撞 B 球
+              </button>
+              <button id="btn-collision-reset" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded-xl transition">
+                重置位置
+              </button>
+              <span class="text-xs text-slate-400">碰撞瞬間動量精確交換，衝量大小相等方向相反。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.3 Newton Gravity Interaction -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-lg font-bold text-pink-400">3. 牛頓萬有引力全域交互作用：地球與蘋果</span>
+            <span class="text-xs px-2.5 py-1 rounded bg-pink-500/10 text-pink-300 border border-pink-500/20">力相等，但加速度懸殊</span>
+          </div>
+          <p class="text-sm text-slate-300 mb-5 leading-relaxed">
+            <strong>深層迷思破解：</strong>蘋果掉下來時，地球也在受蘋果吸引！兩者受到的引力大小<strong>完全相等</strong>（$F_{\text{地對蘋}} = F_{\text{蘋對地}}$）；但因地球質量太大（$M_{\text{地}} \approx 6 \times 10^{24}$ kg），地球的加速度幾乎為 0，所以我們只看到蘋果動。
+          </p>
+
+          <!-- Interactive Sim 9 -->
+          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 mb-5">
+            <!-- Large Canvas -->
+            <canvas id="canvas-earth-apple" width="900" height="260" class="sim-canvas mb-4"></canvas>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <button id="btn-apple-drop" class="px-5 py-2.5 bg-pink-600 hover:bg-pink-500 active:scale-95 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-pink-900/40">
+                <i data-lucide="arrow-down-circle" class="w-4 h-4"></i> 釋放蘋果下落
+              </button>
+              <span class="text-xs text-slate-400 font-mono">觀察引力箭頭 $\vec{F}$ 永遠成對等長，但 $a = F/m$ 造成運動截然不同</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SUMMARY SECTION -->
+    <section id="summary" class="scroll-mt-20 pt-8 border-t border-slate-800">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">科學思維的三大歷史跨越總結</h2>
+        <p class="text-slate-400 text-sm mt-1">從經驗直覺走向理性公理化的典範轉移</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+          <div class="text-xs font-bold text-indigo-400 mb-2">跨越一 ｜ 觀察維度</div>
+          <h3 class="text-base font-bold text-white mb-2">經驗雜訊 $\rightarrow$ 理想抽象</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">剔除地表無所不在的摩擦力干擾，看見物質「自持運動」的慣性本質。</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+          <div class="text-xs font-bold text-sky-400 mb-2">跨越二 ｜ 數學維度</div>
+          <h3 class="text-base font-bold text-white mb-2">當前狀態 $\rightarrow$ 動態變化率</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">不把力與「速度 $v$」綁定，而是用微積分將力定量為「動量變化率 $dp/dt$」。</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+          <div class="text-xs font-bold text-pink-400 mb-2">跨越三 ｜ 系統維度</div>
+          <h3 class="text-base font-bold text-white mb-2">單向因果 $\rightarrow$ 交互對稱守恆</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">打破主客體施力迷思，確立力是成對存在的雙向關係，奠定系統動量守恆。</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500 mt-20">
+    <p>牛頓三大運動定律歷史與思維演進 ｜ 互動實驗室</p>
+  </footer>
+
+  <!-- ======================================================== -->
+  <!-- HIGH-RES JAVASCRIPT SIMULATION LOGIC -->
+  <!-- ======================================================== -->
+  <script>
+    lucide.createIcons();
+
+    // 1. Aristotle Sim (Large 900x220)
+    (function() {
+      const canvas = document.getElementById('canvas-aristotle');
+      const ctx = canvas.getContext('2d');
+      const btn = document.getElementById('btn-aristotle-push');
+      const status = document.getElementById('sim1-status');
+      let x = 80;
+      let pushing = false;
+
+      btn.addEventListener('mousedown', () => { pushing = true; status.textContent = '狀態：持續施加推力 F > 0（以等速前進）'; status.className = 'text-xs font-mono px-2.5 py-1 rounded bg-emerald-950 border border-emerald-800 text-emerald-400'; });
+      btn.addEventListener('mouseup', () => { pushing = false; status.textContent = '狀態：推力為 0（立即驟停！）'; status.className = 'text-xs font-mono px-2.5 py-1 rounded bg-amber-950 border border-amber-800 text-amber-400'; });
+      btn.addEventListener('touchstart', (e) => { e.preventDefault(); pushing = true; status.textContent = '狀態：持續施加推力 F > 0'; });
+      btn.addEventListener('touchend', () => { pushing = false; status.textContent = '狀態：推力為 0（立即驟停）'; });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Ground
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(30, 160);
+        ctx.lineTo(870, 160);
+        ctx.stroke();
+
+        // Ground hash lines
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        for (let i = 30; i < 870; i += 20) {
+          ctx.beginPath();
+          ctx.moveTo(i, 160);
+          ctx.lineTo(i - 10, 175);
+          ctx.stroke();
+        }
+
+        if (pushing) {
+          x += 3.5;
+          if (x > 760) x = 80;
+        }
+
+        // Wooden Crate
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(x, 95, 65, 65);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, 95, 65, 65);
+
+        // Inner X on crate
+        ctx.strokeStyle = '#d97706';
+        ctx.beginPath();
+        ctx.moveTo(x, 95); ctx.lineTo(x + 65, 160);
+        ctx.moveTo(x + 65, 95); ctx.lineTo(x, 160);
+        ctx.stroke();
+
+        // Push Hand / Force Vector
+        if (pushing) {
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(x - 60, 127);
+          ctx.lineTo(x - 5, 127);
+          ctx.stroke();
+
+          // Arrowhead
+          ctx.fillStyle = '#38bdf8';
+          ctx.beginPath();
+          ctx.moveTo(x - 5, 127);
+          ctx.lineTo(x - 18, 118);
+          ctx.lineTo(x - 18, 136);
+          ctx.fill();
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.fillText('推力 F > 0', x - 70, 110);
+        }
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('木塊 m', x + 12, 132);
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 2. Impetus Sim (Large 900x300, Fully inside canvas)
+    (function() {
+      const canvas = document.getElementById('canvas-impetus');
+      const ctx = canvas.getContext('2d');
+      const btn = document.getElementById('btn-impetus-fire');
+      const bar = document.getElementById('impetus-bar');
+      const num = document.getElementById('impetus-num');
+
+      let x = 70, y = 220, vx = 0, vy = 0, impetus = 0, firing = false;
+      let path = [];
+
+      btn.addEventListener('click', () => {
+        x = 70; y = 220; vx = 5.2; vy = -2.6; impetus = 100; firing = true; path = [];
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Ground
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(30, 240);
+        ctx.lineTo(870, 240);
+        ctx.stroke();
+
+        // Castle Wall / Ground
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(30, 220, 60, 20);
+
+        if (firing) {
+          x += vx;
+          y += vy;
+          impetus -= 0.55;
+          if (impetus < 0) impetus = 0;
+          bar.style.width = impetus + '%';
+          num.textContent = Math.round(impetus) + '%';
+
+          path.push({ x: x, y: y });
+
+          // Impetus Phase Breakdown
+          if (impetus > 40) {
+            // Stage 1: Straight line powered by impetus
+            // maintaining almost straight angle
+          } else if (impetus > 15) {
+            // Stage 2: Curved transition
+            vx *= 0.96;
+            vy += 0.25;
+          } else {
+            // Stage 3: Natural gravity takes over, sharp vertical drop!
+            vx *= 0.85;
+            vy += 0.6;
+          }
+
+          if (y >= 230) {
+            y = 230;
+            firing = false;
+          }
+        }
+
+        // Draw Trajectory Path
+        if (path.length > 1) {
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(path[0].x, path[0].y);
+          for (let p of path) ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Cannon
+        ctx.fillStyle = '#64748b';
+        ctx.save();
+        ctx.translate(60, 230);
+        ctx.rotate(-25 * Math.PI / 180);
+        ctx.fillRect(0, -10, 40, 20);
+        ctx.restore();
+
+        // Cannonball
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(x, y, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#0284c7';
+        ctx.stroke();
+
+        // Text indicator above ball
+        if (firing) {
+          ctx.fillStyle = impetus > 40 ? '#38bdf8' : (impetus > 15 ? '#f59e0b' : '#f43f5e');
+          ctx.font = 'bold 12px sans-serif';
+          let txt = impetus > 40 ? '① 衝力佔優勢（直線前行）' : (impetus > 15 ? '② 衝力衰退（開始彎曲）' : '③ 衝力耗盡！（垂直直墜）');
+          ctx.fillText(txt, Math.min(x - 50, 680), Math.max(y - 20, 40));
+        }
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 3. Galileo Double Incline (Large 900x260)
+    let galileoAngle = 45;
+    window.setGalileoAngle = function(angle) {
+      galileoAngle = angle;
+      galileoReset();
+    };
+    let gBall = { x: 70, y: 70, vx: 0, vy: 0 };
+    let gRunning = false;
+
+    function galileoReset() {
+      gBall = { x: 70, y: 70, vx: 0, vy: 0 };
+      gRunning = true;
+    }
+    document.getElementById('btn-galileo-release').addEventListener('click', galileoReset);
+
+    (function() {
+      const canvas = document.getElementById('canvas-galileo');
+      const ctx = canvas.getContext('2d');
+      const startH = 70;
+      const bottomY = 200;
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Track Rails
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(50, startH);
+        ctx.lineTo(260, bottomY);
+        ctx.lineTo(340, bottomY);
+
+        let rightEndX, rightEndY;
+        if (galileoAngle === 0) {
+          rightEndX = 860;
+          rightEndY = bottomY;
+        } else {
+          let rad = galileoAngle * Math.PI / 180;
+          let len = (bottomY - startH) / Math.sin(rad);
+          rightEndX = 340 + len * Math.cos(rad);
+          rightEndY = startH;
+        }
+        ctx.lineTo(rightEndX, rightEndY);
+        ctx.stroke();
+
+        // Equal Height Reference Line (Dashed)
+        ctx.strokeStyle = 'rgba(129, 140, 248, 0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.moveTo(40, startH);
+        ctx.lineTo(860, startH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#818cf8';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('初始等高線 h₀', 760, startH - 8);
+
+        // Rolling logic
+        if (gRunning) {
+          if (gBall.x < 260) {
+            gBall.x += 3.2;
+            gBall.y = startH + (bottomY - startH) * ((gBall.x - 50) / 210);
+          } else if (gBall.x < 340) {
+            gBall.x += 4.5;
+            gBall.y = bottomY;
+          } else {
+            if (galileoAngle === 0) {
+              gBall.x += 4.5;
+              gBall.y = bottomY;
+              if (gBall.x > 860) gBall.x = 340; // loop
+            } else {
+              gBall.x += 3.2;
+              let t = (gBall.x - 340) / (rightEndX - 340);
+              if (t <= 1) {
+                gBall.y = bottomY - (bottomY - startH) * t;
+              } else {
+                gRunning = false;
+              }
+            }
+          }
+        }
+
+        // Draw Rolling Ball
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(gBall.x, gBall.y - 10, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 4. Falling Comparison (Large 900x320)
+    (function() {
+      const canvas = document.getElementById('canvas-falling');
+      const ctx = canvas.getContext('2d');
+      const btn = document.getElementById('btn-falling-drop');
+      let running = false, t = 0;
+      let posA = 40, posG = 40;
+      let dotsA = [], dotsG = [];
+
+      btn.addEventListener('click', () => {
+        running = true; t = 0; posA = 40; posG = 40; dotsA = []; dotsG = [];
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Ground
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(50, 280); ctx.lineTo(850, 280);
+        ctx.stroke();
+
+        // Dividing wall
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(450, 30); ctx.lineTo(450, 280); ctx.stroke();
+
+        if (running) {
+          t += 0.03;
+          posA = 40 + 65 * t;
+          posG = 40 + 45 * (t * t);
+
+          // Drop stroboscopic trail dots every 0.15s
+          if (Math.floor(t * 100) % 15 === 0) {
+            dotsA.push(posA);
+            dotsG.push(posG);
+          }
+
+          if (posG >= 270) {
+            posG = 270;
+            running = false;
+          }
+        }
+
+        // Draw stroboscopic dots
+        for (let y of dotsA) {
+          ctx.fillStyle = 'rgba(245, 158, 11, 0.3)';
+          ctx.beginPath(); ctx.arc(250, y, 6, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let y of dotsG) {
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+          ctx.beginPath(); ctx.arc(650, y, 6, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Left Ball (Aristotle - Constant Velocity)
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath(); ctx.arc(250, posA, 11, 0, Math.PI * 2); ctx.fill();
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText('亞里斯多德（等速模型 v=const，等距打點）', 110, 25);
+
+        // Right Ball (Galileo - Accelerated)
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath(); ctx.arc(650, posG, 11, 0, Math.PI * 2); ctx.fill();
+        ctx.fillText('伽利略（等加速模型 s ∝ t²，間隔 1:3:5:7 劇烈拉開）', 490, 25);
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 5. Huygens Circular Sim (Large 900x300)
+    (function() {
+      const canvas = document.getElementById('canvas-huygens');
+      const ctx = canvas.getContext('2d');
+      const btnCut = document.getElementById('btn-huygens-cut');
+      const btnReset = document.getElementById('btn-huygens-reset');
+      const status = document.getElementById('huygens-status');
+
+      let cx = 450, cy = 150, r = 90, angle = 0, cut = false;
+      let bx = 0, by = 0, bvx = 0, bvy = 0;
+      let trail = [];
+
+      btnCut.addEventListener('click', () => {
+        if (!cut) {
+          cut = true;
+          let speed = 3.2;
+          bvx = -Math.sin(angle) * speed;
+          bvy = Math.cos(angle) * speed;
+          status.textContent = '繩斷！向心力消失，物體沿切線等速直線飛離';
+          status.className = 'text-xs text-rose-400 font-mono font-bold px-2.5 py-1 rounded bg-rose-950 border border-rose-800';
+        }
+      });
+
+      btnReset.addEventListener('click', () => {
+        cut = false; trail = [];
+        status.textContent = '向心拉力作用中';
+        status.className = 'text-xs text-slate-300 font-mono px-2.5 py-1 rounded bg-slate-900 border border-slate-800';
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Circular dashed track
+        ctx.strokeStyle = 'rgba(20, 184, 166, 0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Center Pivot
+        ctx.fillStyle = '#64748b';
+        ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fill();
+
+        if (!cut) {
+          angle += 0.035;
+          bx = cx + r * Math.cos(angle);
+          by = cy + r * Math.sin(angle);
+
+          // Rope
+          ctx.strokeStyle = '#14b8a6';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by); ctx.stroke();
+
+          // Centripetal Acceleration Vector Arrow (towards center)
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(bx, by);
+          ctx.lineTo(bx - 35 * Math.cos(angle), by - 35 * Math.sin(angle));
+          ctx.stroke();
+
+          // Velocity Tangent Vector Arrow
+          ctx.strokeStyle = '#f43f5e';
+          ctx.beginPath();
+          ctx.moveTo(bx, by);
+          ctx.lineTo(bx - 35 * Math.sin(angle), by + 35 * Math.cos(angle));
+          ctx.stroke();
+        } else {
+          bx += bvx;
+          by += bvy;
+          trail.push({ x: bx, y: by });
+        }
+
+        // Draw Fly Trail
+        if (trail.length > 1) {
+          ctx.strokeStyle = 'rgba(244, 63, 94, 0.4)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(trail[0].x, trail[0].y);
+          for (let p of trail) ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+        }
+
+        // Rotating Ball
+        ctx.fillStyle = '#14b8a6';
+        ctx.beginPath(); ctx.arc(bx, by, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 6. Newton F=ma Sim (Large 900x200)
+    (function() {
+      const canvas = document.getElementById('canvas-fma');
+      const ctx = canvas.getContext('2d');
+      const sF = document.getElementById('slider-f');
+      const sM = document.getElementById('slider-m');
+      const vF = document.getElementById('val-f');
+      const vM = document.getElementById('val-m');
+      const bF = document.getElementById('box-f');
+      const bM = document.getElementById('box-m');
+      const vA = document.getElementById('val-a');
+      const vV = document.getElementById('val-v');
+      const btnRun = document.getElementById('btn-fma-run');
+      const btnReset = document.getElementById('btn-fma-reset');
+
+      let x = 60, v = 0, running = false;
+
+      function updateA() {
+        let f = parseFloat(sF.value);
+        let m = parseFloat(sM.value);
+        let a = f / m;
+        vF.textContent = f + ' N';
+        vM.textContent = m + ' kg';
+        bF.textContent = f + ' N';
+        bM.textContent = m + ' kg';
+        vA.textContent = a.toFixed(2) + ' m/s²';
+        return a;
+      }
+      sF.addEventListener('input', updateA);
+      sM.addEventListener('input', updateA);
+
+      btnRun.addEventListener('click', () => { running = true; });
+      btnReset.addEventListener('click', () => { running = false; x = 60; v = 0; vV.textContent = '0.00 m/s'; });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let a = updateA();
+
+        // Track
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(30, 150); ctx.lineTo(870, 150); ctx.stroke();
+
+        if (running) {
+          v += a * 0.015;
+          x += v;
+          vV.textContent = (v * 10).toFixed(2) + ' m/s';
+          if (x > 780) running = false;
+        }
+
+        // Cart
+        let m = parseFloat(sM.value);
+        let cartW = 50 + m * 5;
+        let cartH = 45;
+        ctx.fillStyle = '#0284c7';
+        ctx.fillRect(x, 150 - cartH, cartW, cartH - 10);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, 150 - cartH, cartW, cartH - 10);
+
+        // Wheels
+        ctx.fillStyle = '#475569';
+        ctx.beginPath(); ctx.arc(x + 15, 145, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + cartW - 15, 145, 7, 0, Math.PI * 2); ctx.fill();
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText(m + ' kg', x + cartW / 2 - 14, 125);
+
+        // Force Arrow
+        let f = parseFloat(sF.value);
+        let arrowLen = f * 2.2;
+        ctx.strokeStyle = '#f43f5e';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(x + cartW, 125);
+        ctx.lineTo(x + cartW + arrowLen, 125);
+        ctx.stroke();
+
+        // Arrow head
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.moveTo(x + cartW + arrowLen, 125);
+        ctx.lineTo(x + cartW + arrowLen - 12, 117);
+        ctx.lineTo(x + cartW + arrowLen - 12, 133);
+        ctx.fill();
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 7. Skaters 3rd Law (Large 900x220)
+    (function() {
+      const canvas = document.getElementById('canvas-skaters');
+      const ctx = canvas.getContext('2d');
+      const btnPush = document.getElementById('btn-skaters-push');
+      const btnReset = document.getElementById('btn-skaters-reset');
+      let ax = 425, bx = 475, avx = 0, bvx = 0, moving = false;
+
+      btnPush.addEventListener('click', () => {
+        moving = true; avx = -3.2; bvx = 3.2;
+      });
+      btnReset.addEventListener('click', () => {
+        moving = false; ax = 425; bx = 475; avx = 0; bvx = 0;
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Ice Rink
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(30, 160); ctx.lineTo(870, 160); ctx.stroke();
+
+        if (moving) {
+          ax += avx;
+          bx += bvx;
+          if (ax < 70) moving = false;
+        }
+
+        // Skater A
+        ctx.fillStyle = '#6366f1';
+        ctx.fillRect(ax - 20, 80, 40, 70);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('A (60kg)', ax - 22, 65);
+
+        // Skater B
+        ctx.fillStyle = '#ec4899';
+        ctx.fillRect(bx - 20, 80, 40, 70);
+        ctx.fillStyle = '#fff'; ctx.fillText('B (60kg)', bx - 22, 65);
+
+        // Force Arrows
+        if (moving) {
+          // Force on A (left)
+          ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 4;
+          ctx.beginPath(); ctx.moveTo(ax - 20, 115); ctx.lineTo(ax - 70, 115); ctx.stroke();
+          ctx.fillStyle = '#6366f1'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('F B對A', ax - 75, 105);
+
+          // Force on B (right)
+          ctx.strokeStyle = '#ec4899';
+          ctx.beginPath(); ctx.moveTo(bx + 20, 115); ctx.lineTo(bx + 70, 115); ctx.stroke();
+          ctx.fillStyle = '#ec4899'; ctx.fillText('F A對B', bx + 35, 105);
+        }
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 8. Elastic Collision (Large 900x200)
+    (function() {
+      const canvas = document.getElementById('canvas-collision');
+      const ctx = canvas.getContext('2d');
+      const btnStart = document.getElementById('btn-collision-start');
+      const btnReset = document.getElementById('btn-collision-reset');
+      let b1 = { x: 100, v: 4.8, m: 3, r: 16, color: '#a855f7' };
+      let b2 = { x: 500, v: 0, m: 3, r: 16, color: '#ec4899' };
+      let moving = false;
+
+      btnStart.addEventListener('click', () => { moving = true; });
+      btnReset.addEventListener('click', () => {
+        moving = false;
+        b1.x = 100; b1.v = 4.8;
+        b2.x = 500; b2.v = 0;
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Track
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(30, 140); ctx.lineTo(870, 140); ctx.stroke();
+
+        if (moving) {
+          b1.x += b1.v;
+          b2.x += b2.v;
+
+          if (b1.x + b1.r >= b2.x - b2.r) {
+            let temp = b1.v;
+            b1.v = b2.v;
+            b2.v = temp;
+          }
+        }
+
+        // Ball 1
+        ctx.fillStyle = b1.color;
+        ctx.beginPath(); ctx.arc(b1.x, 120, b1.r, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('A 球 (v=' + b1.v.toFixed(1) + ')', b1.x - 25, 90);
+
+        // Ball 2
+        ctx.fillStyle = b2.color;
+        ctx.beginPath(); ctx.arc(b2.x, 120, b2.r, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.stroke();
+        ctx.fillText('B 球 (v=' + b2.v.toFixed(1) + ')', b2.x - 25, 90);
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // 9. Earth Apple Interaction (Large 900x260)
+    (function() {
+      const canvas = document.getElementById('canvas-earth-apple');
+      const ctx = canvas.getContext('2d');
+      const btn = document.getElementById('btn-apple-drop');
+      let ay = 40, dropping = false;
+
+      btn.addEventListener('click', () => { ay = 40; dropping = true; });
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Huge Earth Hemisphere
+        ctx.fillStyle = '#1e3a8a';
+        ctx.beginPath(); ctx.arc(450, 420, 240, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.stroke();
+
+        ctx.fillStyle = '#93c5fd'; ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('地球 (質量 M ≈ 6 × 10²⁴ kg ➜ 加速度 a ≈ 0)', 300, 220);
+
+        if (dropping) {
+          ay += 3.5;
+          if (ay > 170) { ay = 170; dropping = false; }
+        }
+
+        // Apple
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath(); ctx.arc(450, ay, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('蘋果 (m = 0.2kg)', 470, ay + 4);
+
+        // Equal and opposite Force vectors
+        // Force on apple downwards
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(450, ay + 14); ctx.lineTo(450, ay + 45); ctx.stroke();
+        ctx.fillText('F地對蘋', 460, ay + 38);
+
+        // Force on Earth upwards
+        ctx.strokeStyle = '#38bdf8';
+        ctx.beginPath(); ctx.moveTo(450, 175); ctx.lineTo(450, 144); ctx.stroke();
+        ctx.fillText('F蘋對地', 460, 160);
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+</body>
+</html>
