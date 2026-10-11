@@ -103,7 +103,7 @@
       <div class="inline-flex flex-wrap justify-center items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 mb-4">
         力學三部曲 ｜
         <a class="underline hover:text-white" href="https://sunny30119.github.io/newton-laws-history/">① 牛頓三大運動定律</a> →
-        <span class="text-slate-500">② 萬有引力（製作中）</span> →
+        <a class="underline hover:text-white" href="https://sunny30119.github.io/newton-laws-history/gravity/">② 萬有引力</a> →
         <span class="text-white">③ 圓周運動</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-4 leading-tight">
@@ -174,7 +174,7 @@
       </div>
       <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
         物理學的「速度」包含兩件事：<strong>多快（速率）</strong>和<strong>往哪裡（方向）</strong>。兩件事只要有一件改變，速度就算改變了。<br>
-        牛頓第二定律說：速度改變，就一定有加速度；有加速度，就一定有合力。所以「等速率」的圓周運動，其實<strong>一直在加速</strong>。只是它加速的方式不是變快，而是轉彎。
+        速度改變，就是有加速度（這是加速度的定義）；牛頓第二定律說：有加速度，就一定有合力。所以「等速率」的圓周運動，其實<strong>一直在加速</strong>。只是它加速的方式不是變快，而是轉彎。
       </div>
       <details class="layer l3"><summary>🔬 資優延伸：週期、轉速與角速度</summary>
         <div class="inner text-slate-300 space-y-2">
@@ -247,7 +247,7 @@
           <button class="btn sel" data-scene="rope">🪢 甩繩子的球</button>
           <button class="btn" data-scene="moon">🌕 月球繞地球</button>
           <button class="btn" data-scene="car">🚗 汽車轉彎</button>
-          <button class="btn" data-scene="rotor">🎡 旋轉咖啡杯（貼牆）</button>
+          <button class="btn" data-scene="rotor">🎡 旋轉圓筒（貼牆遊樂設施）</button>
         </div>
         <canvas id="cv-roles" width="900" height="420" class="sim-canvas"></canvas>
         <div class="flex flex-wrap gap-2">
@@ -275,6 +275,7 @@
           <p>速度越慢，需要的向心力越小。慢到 $N = 0$ 時，<strong>光靠重力就夠了</strong>，這就是不會掉下來的最低速率：</p>
           $$mg = \frac{mv_{\min}^2}{r} \;\Rightarrow\; v_{\min} = \sqrt{gr}$$
           <p>迴圈半徑 10 m 時，$v_{\min} = \sqrt{9.8 \times 10} \approx 9.9$ m/s（約時速 36 公里）。比這還慢，重力就「太多了」，車會脫離軌道往下掉。</p>
+          <p class="text-sm text-slate-400">（以上是沒有扣住軌道的情況。真實的雲霄飛車在軌道下方還有一排輪子扣住軌道，就算速度不夠也不會掉。）</p>
         </div>
       </details>
       <div class="takeaway">💡 一句話帶走：向心力是<u>「角色名稱」</u>，由真的力來演。受力圖只畫真的力。</div>
@@ -347,7 +348,7 @@
       </div>
 
       <div class="layer l1"><div class="layer-tag">👀 先想一想</div>
-        國一學過：判斷「有沒有在動」要先選<strong>參考點</strong>。今天我們把參考點換成一台<strong>攝影機</strong>：
+        第一章「直線運動」學過：判斷「有沒有在動」要先選<strong>參考點</strong>。今天我們把參考點換成一台<strong>攝影機</strong>：
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
           <div class="p-3 rounded-xl bg-slate-950 border border-sky-900"><strong class="text-sky-300">🎥 地面攝影機</strong><br>架在地上，自己不動、不轉。</div>
           <div class="p-3 rounded-xl bg-slate-950 border border-purple-900"><strong class="text-purple-300">🚌 車上攝影機</strong><br>黏在車上，跟著車子一起煞車、一起轉彎。</div>
@@ -423,7 +424,7 @@
       <div class="space-y-2">
         <div class="font-bold text-slate-300">🙋 同學常問</div>
         <details class="qa p-4 rounded-xl bg-slate-900 border border-slate-800"><summary>「可是我真的感覺到被推啊！」</summary>
-          <p class="mt-2 text-slate-300">感覺是真的，但原因不是「有東西往外推你」。你的身體想照慣性直直走，車子卻轉彎了，於是車門或椅子從外側把你往內推。你感覺到的其實是<strong>這個往內的推力</strong>，大腦卻把它解讀成「我被往外甩」。</p></details>
+          <p class="mt-2 text-slate-300">感覺是真的，但原因不是「有東西往外推你」。一開始，沒有任何力推你：是車子轉彎了，你的身體還想直直走，所以你<strong>相對車子</strong>往外滑。等車門或椅子從外側把你往內推，推力只推到身體的一側，身體其他部分還想直走，你就感覺被「壓向」外側。從頭到尾，真的力只有那個<strong>往內的推力</strong>。</p></details>
         <details class="qa p-4 rounded-xl bg-slate-900 border border-slate-800"><summary>「那離心力到底存不存在？」</summary>
           <p class="mt-2 text-slate-300">它是「車上攝影機」帳本上的力。用轉動中的角度計算時，工程師真的會用它，算起來很方便。但它找不到施力者，換成地面攝影機它就消失了，所以它不是「真的力」。</p></details>
         <details class="qa p-4 rounded-xl bg-slate-900 border border-slate-800"><summary>「向心力和離心力是一對作用力與反作用力嗎？」</summary>
@@ -433,7 +434,7 @@
       <details class="layer l3"><summary>🔬 資優延伸：轉動帳本與科氏力</summary>
         <div class="inner text-slate-300 space-y-2">
           <p>在以角速度 $\omega$ 轉動的攝影機裡，質量 $m$、離中心 $r$ 的物體，帳本上要多補一個向外的假想力： $$F_{\text{離}} = m\omega^2 r$$ 剪斷前，冰球在圓盤攝影機裡靜止：$T - m\omega^2 r = 0$，所以繩子拉力 $T = m\omega^2 r$。這和地面攝影機算出的向心力 $m v^2/r$（$v = r\omega$）<strong>完全一樣</strong>。兩台攝影機算出的繩子拉力相同，真的力本來就不會因為換攝影機而改變。</p>
-          <p>仔細看圓盤攝影機裡冰球的軌跡：它不只往外，還<strong>往旁邊彎</strong>。這需要第二個假想力來解釋，叫<strong>科氏力</strong>（Coriolis force）。地球也在自轉，所以颱風在北半球都是逆時針旋轉，就跟它有關。</p>
+          <p>仔細看圓盤攝影機裡冰球的軌跡：它不只往外，還<strong>往旁邊彎</strong>。這需要第二個假想力來解釋，叫<strong>科氏力</strong>（Coriolis force）。這個圓盤和北半球的地球一樣是<strong>逆時針</strong>轉，所以在圓盤攝影機裡，冰球一直往<strong>右</strong>偏。地球也在自轉，北半球的空氣往颱風的低壓中心流過去時，同樣會往右偏，於是形成<strong>逆時針</strong>旋轉的颱風。</p>
           <p><strong>脫水的數字：</strong>轉速每分鐘 1200 轉、半徑 0.25 m 的洗衣槽，$\omega \approx 126$ rad/s，向心加速度 $a = \omega^2 r \approx 3900$ m/s²，約是<strong>重力的 400 倍</strong>。衣服的纖維抓不住水，水就從洞口直直跑掉。</p>
         </div>
       </details>
@@ -966,7 +967,7 @@ function selectIn(selector, btn) { document.querySelectorAll(selector).forEach(b
   const CAPS = [
     '公車和球一起<strong>等速</strong>前進。兩台攝影機都看到：球和車廂一起走，相對車廂不動。',
     '司機<strong>踩煞車</strong>！<span class="text-sky-300">地面攝影機</span>：車子慢下來，球的速度箭頭<strong>一樣長</strong>（地板很滑，沒有力讓它慢下來）。<span class="text-purple-300">車上攝影機</span>：球自己往前衝，好像被一股力往前推。',
-    '車子停了，球還在照原本的速度前進。地面看：它只是<strong>維持原本的運動（慣性）</strong>。車上看：球一直往前滑。',
+    '車子停了，球還在照原本的速度前進。地面看：它只是<strong>維持原本的運動（慣性）</strong>。車上看：球<strong>等速</strong>往前滑。注意：車停了，車上攝影機也不再減速，所以那股「往前推的力」<strong>消失了</strong>，虛線箭頭不見了。',
     '球撞到前面的車廂牆壁才停下。<strong>是牆壁（真的力）讓球停下來的。</strong>想一想：上下兩個畫面，哪一個需要「假想的力」才說得通？'
   ];
   function drawBus(ctx, x, label) {
@@ -982,7 +983,7 @@ function selectIn(selector, btn) { document.querySelectorAll(selector).forEach(b
   }
   function drawTree(ctx, x) { ctx.fillStyle = '#14532d'; ctx.beginPath(); ctx.arc(x, ROAD - 60, 16, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#78350f'; ctx.fillRect(x - 3, ROAD - 46, 6, 46); }
   function draw() {
-    const ph = phase(), braking = t >= TB && ph < 3 && rel(t) < WALL - 1e-6;
+    const ph = phase(), braking = t >= TB && t < TB + TSTOP && rel(t) < WALL - 1e-6;
     // 地面攝影機
     let ctx = G.ctx; ctx.clearRect(0, 0, G.W, G.H);
     for (let x = 80; x < G.W; x += 150) drawTree(ctx, x);
@@ -1117,7 +1118,7 @@ function selectIn(selector, btn) { document.querySelectorAll(selector).forEach(b
   const CLOTHES = [0.2, 2.3, 4.3];
   const cap = $('washer-cap');
   const CAPS = {
-    ground: '<span class="text-sky-300">🎥 地面攝影機：</span>筒壁從外側把衣服往內推（紅色，<strong>筒壁演向心力</strong>），衣服才跟著轉圈。水滴從洞口出去後，沒有東西推它，就沿<strong>切線直直飛</strong>（每條藍線都是直的）。水不是「被甩出去」，是「沒有東西拉住它」。',
+    ground: '<span class="text-sky-300">🎥 地面攝影機：</span>筒壁從外側把衣服往內推（紅色，<strong>筒壁演向心力</strong>），衣服才跟著轉圈。水滴從洞口出去後，沒有東西推它，就沿<strong>切線直直飛</strong>（每條藍線都是直的）。水不是「被甩出去」，是衣服「拉不住它」轉彎。',
     drum: '<span class="text-purple-300">🌀 洗衣槽攝影機：</span>洗衣槽看起來不動，水滴卻像被一股力往外「甩」，路線還彎彎的。這股往外的力找不到施力者，是跟著洗衣槽一起轉才看到的<strong>假想力（離心力）</strong>。'
   };
   document.querySelectorAll('[data-wview]').forEach(b => b.onclick = () => { selectIn('[data-wview]', b); view = b.dataset.wview; cap.innerHTML = CAPS[view]; drops.forEach(d => d.trail = []); });
@@ -1183,8 +1184,8 @@ function selectIn(selector, btn) { document.querySelectorAll(selector).forEach(b
       o: ['對，因為它們大小相等方向相反', '不對，作用力與反作用力作用在不同物體上，而且離心力找不到施力者', '對，所以球才會維持在圓上', '不對，因為向心力比較大'], a: 1,
       e: '繩子拉球的反作用力是「球拉繩子」，作用在繩子上。離心力是假想力，不是誰的反作用力。' },
     { q: '洗衣機脫水時，水會離開衣服，最主要的原因是？',
-      o: ['離心力把水往外推', '筒壁擋住衣服讓衣服轉彎，但沒有東西拉住水，水就沿切線直走、穿過小洞', '水比衣服重', '洗衣機會把水抽走'], a: 1,
-      e: '從地面看，沒有往外推的力。是「沒有力讓水轉彎」，水照慣性直走。' },
+      o: ['離心力把水往外推', '筒壁擋住衣服讓衣服轉彎，但衣服對水的附著力不夠大，拉不住水轉彎，水就沿切線直走、穿過小洞', '水比衣服重', '洗衣機會把水抽走'], a: 1,
+      e: '從地面看，沒有往外推的力。是「讓水轉彎的力不夠」，水照慣性直走。' },
     { q: '⭐ 挑戰：同一顆球做圓周運動，速率變成原來的 2 倍，半徑變成原來的一半，需要的向心力變成原來的幾倍？',
       o: ['1 倍', '2 倍', '4 倍', '8 倍'], a: 3,
       e: '速率 2 倍 → 力 ×4；半徑一半 → 力 ×2。合起來 4×2＝8 倍（F＝mv²/r）。' }

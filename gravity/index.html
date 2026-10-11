@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>萬有引力定律的演變與思維革命史</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    html { scroll-behavior: smooth; }
+    .sim-canvas {
+      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #020617 100%);
+      border: 1px solid #1e293b;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+      border-radius: 0.875rem;
+      width: 100%; height: auto; display: block;
+      touch-action: manipulation;
+    }
+    .mjx-chtml { font-size: 108% !important; }
+
+    /* 統一按鈕 */
+    .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.55rem 1rem; border-radius:.75rem;
+           font-size:.875rem; font-weight:700; border:1px solid #334155; background:#1e293b; color:#e2e8f0;
+           transition: all .15s; cursor:pointer; user-select:none; }
+    .btn:hover:not(:disabled) { background:#334155; }
+    .btn:active:not(:disabled) { transform: scale(.96); }
+    .btn:disabled { opacity:.35; cursor:not-allowed; }
+    .btn-go { background:#4f46e5; border-color:#6366f1; color:#fff; }
+    .btn-go:hover:not(:disabled) { background:#6366f1; }
+    .btn-red { background:#b91c1c; border-color:#ef4444; color:#fff; }
+    .btn-red:hover:not(:disabled) { background:#dc2626; }
+    .btn.sel { background:#4338ca; border-color:#a5b4fc; color:#fff; box-shadow:0 0 0 2px #a5b4fc55; }
+    .btn.right { background:#065f46; border-color:#34d399; color:#fff; }
+    .btn.wrong { background:#7f1d1d; border-color:#f87171; color:#fff; }
+
+    /* 三層深度 */
+    .layer { border-radius: 1rem; padding: 1rem 1.25rem; border: 1px solid; font-size: .95rem; line-height: 1.8; }
+    .layer-tag { display:inline-block; font-size:.75rem; font-weight:800; padding:.15rem .6rem; border-radius:999px; margin-bottom:.4rem; }
+    .l1 { background: #0c1a2e; border-color:#1e3a5f; }
+    .l1 .layer-tag { background:#0ea5e933; color:#7dd3fc; }
+    .l2 { background: #1a1530; border-color:#3b2f63; }
+    .l2 .layer-tag { background:#a855f733; color:#d8b4fe; }
+    details.l3 { background: #1c1408; border-color:#5c4210; }
+    details.l3 > summary { cursor:pointer; font-weight:800; color:#fbbf24; list-style:none; }
+    details.l3 > summary::-webkit-details-marker { display:none; }
+    details.l3 > summary::before { content:'▸ '; }
+    details.l3[open] > summary::before { content:'▾ '; }
+    details.l3 .inner { margin-top:.75rem; }
+    .takeaway { border-radius: 1rem; padding: .9rem 1.25rem; background: linear-gradient(90deg,#064e3b55,#0f172a);
+                border:1px solid #065f46; color:#a7f3d0; font-weight:700; }
+
+    .caption { min-height: 3.2rem; padding:.7rem 1rem; border-radius:.75rem; background:#0f172a; border:1px solid #1e293b;
+               color:#e2e8f0; font-size:.95rem; line-height:1.6; }
+    .chip { display:inline-block; padding:0 .45rem; border-radius:.4rem; cursor:pointer; border:1px dashed #fbbf24; color:#fde68a; }
+    .chip:hover { background:#fbbf2422; }
+    .glow { box-shadow: 0 0 0 3px #fbbf24, 0 0 18px #fbbf24aa !important; border-radius:.75rem; }
+    input[type=range] { accent-color:#818cf8; width:100%; }
+    .qa summary { cursor:pointer; font-weight:700; color:#e2e8f0; }
+    .station-num { width:2.75rem; height:2.75rem; border-radius:.9rem; display:flex; align-items:center; justify-content:center;
+                   font-weight:900; font-size:1.15rem; border:1px solid; flex-shrink:0; }
+    .legend-dot { display:inline-block; width:.8rem; height:.8rem; border-radius:3px; vertical-align:middle; margin-right:.25rem; }
+    table.rec td, table.rec th { padding:.3rem .6rem; border-bottom:1px solid #1e293b; text-align:center; }
+    @media print { header, .btn, input[type=range] { display:none !important; } details.l3 { display:block; } }
+  </style>
+  <style>
+    .era { font-size:.75rem; padding:.2rem .6rem; border-radius:.4rem; border:1px solid; white-space:nowrap; }
+    .card { background:#0f172a; border:1px solid #1e293b; border-radius:1.25rem; padding:1.25rem; }
+    @media (min-width:640px) { .card { padding:1.75rem; } }
+    .tab-row .btn { padding:.4rem .8rem; }
+    #cv-ug { touch-action: none; cursor: grab; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white pb-24">
+
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/85 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 min-w-0">
+        <i data-lucide="orbit" class="w-6 h-6 text-indigo-400 shrink-0"></i>
+        <span class="font-bold tracking-wider truncate bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">萬有引力思維實驗室</span>
+      </div>
+      <nav class="hidden lg:flex items-center gap-3 text-sm font-medium text-slate-300">
+        <a href="#g1" class="hover:text-indigo-400">天地兩界</a>
+        <a href="#g2" class="hover:text-indigo-400">地心vs日心</a>
+        <a href="#g3" class="hover:text-indigo-400">克卜勒</a>
+        <a href="#g4" class="hover:text-indigo-400">伽利略</a>
+        <a href="#g5" class="hover:text-indigo-400">牛頓砲彈</a>
+        <a href="#g6" class="hover:text-indigo-400">月球檢驗</a>
+        <a href="#g7" class="hover:text-indigo-400">萬有引力</a>
+        <a href="#g8" class="hover:text-indigo-400">秤地球</a>
+        <a href="#g9" class="hover:text-indigo-400">迷思</a>
+        <a href="#g10" class="hover:text-indigo-400">總結</a>
+      </nav>
+      <a href="#downloads" class="btn !py-1.5 !px-3 !text-xs shrink-0"><i data-lucide="download" class="w-4 h-4"></i> 學習單</a>
+    </div>
+  </header>
+
+  <section class="relative pt-14 pb-10 text-center border-b border-slate-800 bg-gradient-to-b from-indigo-950/40 to-slate-950 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-flex flex-wrap justify-center items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 mb-4">
+        力學三部曲 ｜
+        <a class="underline hover:text-white" href="https://sunny30119.github.io/newton-laws-history/">① 牛頓三大運動定律</a> →
+        <span class="text-white">② 萬有引力</span> →
+        <a class="underline hover:text-white" href="https://sunny30119.github.io/newton-laws-history/circular-motion/">③ 圓周運動</a>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-4 leading-tight">
+        萬有引力定律：<br>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-pink-400">從天地兩界到一條定律</span>
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-6">主軸問題：<strong class="text-white">「蘋果會掉下來，為什麼月亮不會？」</strong></p>
+      <div class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 text-left text-sm">
+        <div class="layer l1 !py-3"><div class="layer-tag">👀 看懂</div><div class="text-slate-300">每個人都看得懂：動畫＋一句話結論，不用公式。</div></div>
+        <div class="layer l2 !py-3"><div class="layer-tag">🤔 想深一點</div><div class="text-slate-300">想知道「為什麼」：用圖形和比例推理。</div></div>
+        <div class="layer !py-3 bg-[#1c1408] border-[#5c4210]"><div class="layer-tag bg-amber-500/20 text-amber-300">🔬 資優延伸</div><div class="text-slate-300">點開才出現：原始數據與定量計算。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-12 space-y-20">
+
+    <!-- 0 開場 -->
+    <section id="g0" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-pink-500/15 text-pink-300 border-pink-500/30">0</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">蘋果會掉，月亮為什麼不掉？</h2>
+        <p class="text-sm text-slate-400">兩千年來，人們認為這兩件事遵守完全不同的規則。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-open" width="900" height="300" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2"><button id="open-drop" class="btn btn-go">🍎 放開蘋果</button></div>
+        <div class="caption">左邊：蘋果一放手就掉下來。右邊：月亮一直繞著地球，從來不掉下來。<strong>你覺得這兩件事，是同一個原因造成的嗎？</strong>先記住你的想法，看完這一頁再回來對答案。</div>
+      </div>
+    </section>
+
+    <!-- 1 亞里斯多德 -->
+    <section id="g1" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-amber-500/15 text-amber-300 border-amber-500/30">1</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">亞里斯多德：天上地上，兩套規則</h2><span class="era border-amber-500/30 text-amber-300 bg-amber-500/10">西元前 4 世紀・經驗直覺</span></div>
+        <p class="text-sm text-slate-400">月亮以上是「天界」，月亮以下是「地界」。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-two" width="900" height="360" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2">
+          <button id="two-apple" class="btn btn-go">🍎 蘋果回到「自然位置」</button>
+          <button id="two-stone" class="btn">🪨 水平丟出石頭</button>
+          <label class="text-sm text-slate-300 flex items-center gap-1.5 ml-2"><input id="two-real" type="checkbox" class="accent-indigo-400"> 顯示真實路線</label>
+        </div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        亞里斯多德認為：<strong>天上</strong>的東西用「以太」做成，完美、永遠不變，只會做<strong>圓周運動</strong>。<strong>地上</strong>的東西會回到它的「自然位置」，例如石頭往下掉、火往上竄，回到了就停。天上地上，規則不一樣。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        （黃色虛線「先直走、再直直掉」其實是<strong>中世紀衝力說</strong>畫的圖；亞里斯多德本人認為，是被推開的空氣繞到後面推著石頭走。兩種說法都認為要有「推動的原因」，才會一直動。）<br>勾選「顯示真實路線」：水平丟出的石頭，實際上走的是一條<strong>彎曲的線</strong>，不是「先直走、再直直掉」。這條彎曲的線，等一下到了第 5 節會變成解開月亮之謎的鑰匙。<br>
+        這個想法撐了將近兩千年，因為它和日常經驗很吻合：天上的星星真的每晚都一樣，地上的東西真的會掉下來停住。
+      </div>
+      <div class="takeaway">💡 一句話帶走：古人認為<u>天上和地上遵守不同的規則</u>，這正是之後要被推翻的想法。</div>
+    </section>
+
+    <!-- 2 地心 vs 日心 -->
+    <section id="g2" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-sky-500/15 text-sky-300 border-sky-500/30">2</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">托勒密 vs 哥白尼：火星為什麼會倒退？</h2><span class="era border-sky-500/30 text-sky-300 bg-sky-500/10">2 世紀 → 1543 年</span></div>
+        <p class="text-sm text-slate-400">火星在夜空中大多往東走，但每隔約兩年，會有一段時間「倒退」往西走。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <div class="flex flex-wrap gap-2 tab-row">
+          <button class="btn sel" data-model="cop">☀️ 哥白尼：太陽在中心</button>
+          <button class="btn" data-model="pto">🌍 托勒密：地球在中心（本輪）</button>
+        </div>
+        <canvas id="cv-retro" width="900" height="440" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="retro-play" class="btn btn-go">⏸ 暫停</button>
+          <button id="retro-reset" class="btn">↺ 重來</button>
+          <span id="retro-info" class="text-sm text-slate-400 ml-2 mono"></span>
+        </div>
+        <div id="retro-cap" class="caption"></div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        右邊是「從地球看到的天空」，<span class="text-red-300">紅色</span>那段就是火星在倒退。<strong>哥白尼的解釋</strong>：地球跑內圈、比較快，追過火星時，火星看起來就像在往後退（就像在高速公路上超車，旁邊的慢車看起來往後跑）。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        切換到托勒密的模型：地球在中心不動，火星在一個小圓（本輪）上轉，小圓的中心再繞著地球轉。<strong>右邊天空的軌跡一模一樣！</strong>（在這個簡化版裡，兩者數學上完全等價。）<br>
+        那為什麼要換？哥白尼的模型不必為了解釋倒退，替每顆行星加一個大本輪：倒退自然就是「地球超車」，而且一定發生在火星最亮、和太陽正對面（衝）的時候。它還順便排出了行星的順序和相對距離。<br><span class="text-slate-400 text-sm">⚠ 真實歷史沒有這麼一面倒：哥白尼為了精確，仍然用了不少小圓，兩個模型的預測準確度其實差不多。勝負要等到克卜勒的橢圓和伽利略的望遠鏡。</span>
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：為什麼這兩個簡化模型一模一樣？</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>用向量看：從地球看火星的位置 ＝ 火星位置 － 地球位置： $$\vec{r}_{\text{地→火}} = \vec{r}_{\text{火}} - \vec{r}_{\text{地}} = \underbrace{\vec{r}_{\text{火}}}_{\text{均輪：半徑 1.52、週期 1.88 年}} + \underbrace{(-\vec{r}_{\text{地}})}_{\text{本輪：半徑 1、週期 1 年}}$$</p>
+          <p>所以托勒密的「均輪＋本輪」在數學上就是把哥白尼的兩個圓<strong>換個順序相加</strong>。本輪的週期剛好是一年，這個巧合其實是在暗示：本輪就是地球自己的公轉。</p>
+          <p class="text-sm text-slate-400">註：畫面上火星的上下起伏有放大，用來看出「打結」的形狀（真實傾角約 1.85°）。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：火星倒退是因為<u>地球自己也在繞太陽跑</u>。太陽在中心的模型，讓倒退變得很自然。</div>
+    </section>
+
+    <!-- 3 克卜勒 -->
+    <section id="g3" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-emerald-500/15 text-emerald-300 border-emerald-500/30">3</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">第谷＋克卜勒：把天空量出來</h2><span class="era border-emerald-500/30 text-emerald-300 bg-emerald-500/10">1609 – 1619 年・精準數據</span></div>
+        <p class="text-sm text-slate-400">第谷用肉眼累積了 20 多年最精準的星空紀錄；克卜勒花了約 8 年找出前兩條規律，又過了將近 10 年才找到第三條。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <div class="flex flex-wrap gap-2 tab-row">
+          <button class="btn sel" data-kep="1">第一定律：橢圓</button>
+          <button class="btn" data-kep="2">第二定律：等面積</button>
+          <button class="btn" data-kep="3">第三定律：越遠越慢</button>
+        </div>
+        <canvas id="cv-kepler" width="900" height="440" class="sim-canvas"></canvas>
+        <div id="kep-ctrl-e" class="flex items-center gap-3 text-sm"><span class="shrink-0">扁的程度（離心率 e）</span><input id="kep-e" type="range" min="0" max="0.8" step="0.05" value="0.5"><span id="kep-e-val" class="mono shrink-0 w-10 text-indigo-300">0.50</span></div>
+        <div id="kep-ctrl-a" class="flex items-center gap-3 text-sm hidden"><span class="shrink-0">「你的行星」軌道大小</span><input id="kep-a" type="range" min="0.4" max="5.5" step="0.1" value="3"><span id="kep-a-val" class="mono shrink-0 w-16 text-pink-300">3.0 AU</span></div>
+        <div id="kep-cap" class="caption"></div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        <strong>① 行星走橢圓</strong>，太陽在其中一個焦點上（不是正中央）。<strong>② 離太陽近時跑得快，遠時跑得慢</strong>，快慢剛好讓「每段相同時間掃過的面積一樣大」。<strong>③ 離太陽越遠的行星，繞一圈要越久</strong>。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        克卜勒的三定律只說了行星<strong>「怎麼動」</strong>，沒有說<strong>「為什麼這樣動」</strong>。為什麼靠近太陽就變快？為什麼遠的行星慢？好像太陽有一種<strong>「越近越強」的影響力</strong>。克卜勒猜到了這一點，但他猜的是「力跟距離成反比」，不是「跟距離的平方成反比」。正確答案要等牛頓。<br>
+        另外，真實行星的橢圓其實<strong>非常接近圓</strong>（地球 e ≈ 0.017）。克卜勒從火星下手，因為火星的 e ≈ 0.093，是當時已知行星中最扁的之一。他最好的正圓模型，和第谷的火星數據差了約 <strong>8 角分</strong>（約滿月寬度的四分之一）。第谷的誤差只有約 2 角分，克卜勒選擇相信數據，只好放棄完美的正圓。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：第三定律 $T^2 \propto a^3$ 用真實數據驗證</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>以地球為單位（距離用 AU、時間用年），第三定律變成 $\;T^2 = a^3$。</p>
+          <div class="overflow-x-auto"><table class="rec w-full mono text-sm"><thead class="text-slate-400"><tr><th>行星</th><th>a (AU)</th><th>T (年)</th><th>T²</th><th>a³</th><th>T²/a³</th></tr></thead>
+          <tbody id="kep-table"></tbody></table></div>
+          <p>六顆行星的 $T^2/a^3$ 都<strong>非常接近 1</strong>（差不到 0.2%）。這是很強的線索：某種跟距離有關的規律在控制所有行星。第 6 節會看到，牛頓從這條定律推出了「平方反比」。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：克卜勒用精準數據描述了行星<u>「怎麼動」</u>，但還不知道<u>「為什麼」</u>。</div>
+    </section>
+
+    <!-- 4 伽利略 -->
+    <section id="g4" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-indigo-500/15 text-indigo-300 border-indigo-500/30">4</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">伽利略：望遠鏡裡的小月亮</h2><span class="era border-indigo-500/30 text-indigo-300 bg-indigo-500/10">1610 年・觀測證據</span></div>
+        <p class="text-sm text-slate-400">伽利略把望遠鏡對準木星，連續好幾晚畫下它旁邊的小亮點。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-jup" width="900" height="420" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2">
+          <button id="jup-next" class="btn btn-go">🌙 看下一晚</button>
+          <button id="jup-reveal" class="btn">🔭 揭曉：從木星正上方看</button>
+          <button id="jup-reset" class="btn">↺ 重來</button>
+        </div>
+        <div id="jup-cap" class="caption">按「看下一晚」，像伽利略一樣每晚記錄一次。這四個亮點會跟著木星移動，但位置一直在變。它們在做什麼？</div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        這四個小亮點左右來回跑，其實是在<strong>繞著木星轉圈</strong>（我們從側面看，圓圈就變成一條線）。這證明了：<strong>不是所有東西都繞著地球轉</strong>。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        伽利略同時也在研究地上的落體和拋體，發現它們有精確的數學規律。他一手研究「地上怎麼掉」，一手看到「天上怎麼繞」。天地兩界的牆開始出現裂縫。不過要注意：木星有衛星，還<strong>不能證明地球繞太陽</strong>（第谷「行星繞太陽、太陽繞地球」的折衷模型也容許木星有衛星）。伽利略同年觀察到的金星盈虧，才是更強的證據。<br>
+        還有一個有趣的地方：木星的衛星也遵守克卜勒第三定律，越外面的衛星繞得越慢。這表示那條規律<strong>不只屬於太陽</strong>。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：木星衛星的數據</summary>
+        <div class="inner text-slate-300">
+          <div class="overflow-x-auto"><table class="rec w-full mono text-sm"><thead class="text-slate-400"><tr><th>衛星</th><th>距離（木星半徑）</th><th>週期（天）</th><th>T²/a³</th></tr></thead>
+          <tbody id="jup-table"></tbody></table></div>
+          <p class="mt-2">四顆的 $T^2/a^3$ 也幾乎相等。注意這張表的單位是「木星半徑、天」，和行星表的「AU、年」不同，數字不能直接比。如果換成同樣的 AU、年，木星系統的 $T^2/a^3$ 約是 <strong>1040</strong>，太陽系是 1。<br>因為 $T^2/a^3 = \dfrac{4\pi^2}{GM}$，這個值跟<strong>中心天體的質量成反比</strong>：木星系統的值大了約 1000 倍，表示木星質量只有太陽的約 1/1000（實際約 1/1047）。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：木星也有衛星繞著轉，<u>天體不是都繞著地球</u>；天上地上的研究開始接軌。</div>
+    </section>
+
+    <!-- 5 牛頓砲彈 -->
+    <section id="g5" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-red-500/15 text-red-300 border-red-500/30">5</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">牛頓的砲彈山：月亮其實一直在「掉」</h2><span class="era border-red-500/30 text-red-300 bg-red-500/10">約 1685 年・思想實驗</span></div>
+        <p class="text-sm text-slate-400">在一座超高的山頂水平發射砲彈。發射越快，落地點越遠。如果非常快呢？</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-cannon" width="900" height="520" class="sim-canvas"></canvas>
+        <div class="flex items-center gap-3 text-sm"><span class="shrink-0">發射速度</span><input id="can-v" type="range" min="0.3" max="1.45" step="0.01" value="0.6"><span id="can-v-val" class="mono shrink-0 w-24 text-right text-sky-300"></span></div>
+        <div class="flex flex-wrap gap-2">
+          <button id="can-fire" class="btn btn-red">💥 發射</button>
+          <button class="btn" data-v="0.6">慢：掉回地面</button>
+          <button class="btn" data-v="0.953">剛好：繞一圈</button>
+          <button class="btn" data-v="1.15">更快：橢圓</button>
+          <button class="btn" data-v="1.4">太快：飛走</button>
+          <button id="can-clear" class="btn">🗑 清除軌跡</button>
+          <label class="text-sm text-slate-300 flex items-center gap-1.5 ml-1"><input id="can-ghost" type="checkbox" checked class="accent-indigo-400"> 顯示「如果沒有引力」的直線</label>
+        </div>
+        <div id="can-cap" class="caption">選一個速度，按「發射」。</div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        砲彈一直被地球往下拉，所以一直在「掉」。但如果它往前跑得夠快，地面是圓的，地面「彎下去」的速度剛好跟它掉的速度一樣，它就<strong>永遠掉不到地面</strong>，於是一直繞圈。<strong>月亮就是這樣：它一直在往地球掉，只是一直往前跑，所以掉不到。</strong>
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        有個直觀數字：沿著地面每往前 8 公里，地球表面大約「彎下去」5 公尺，剛好約等於物體第一秒落下的 4.9 公尺。所以每秒跑 8 公里，就永遠掉不到地面。<br>這就是第 1 節那條「彎曲的石頭路線」。牛頓的突破是：<strong>丟石頭和月亮繞地球是同一件事</strong>，差別只在速度。天上地上的牆，就在這裡倒下了。<br>
+        灰色虛線是「如果突然沒有引力」砲彈會走的直線（慣性）。砲彈實際的路線一直往虛線的<strong>下方（地球那邊）</strong>偏，偏掉的量就是它「掉」的量。這跟<a class="underline text-sky-300" href="https://sunny30119.github.io/newton-laws-history/circular-motion/">圓周運動</a>那一頁講的向心力是同一件事：引力在這裡演向心力。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：第一宇宙速度與脫離速度</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>貼著地表繞圈時，引力（重力 $mg$）就是向心力： $$mg = \frac{mv^2}{R} \;\Rightarrow\; v = \sqrt{gR} = \sqrt{9.8 \times 6.37\times10^6} \approx 7.9\ \text{km/s}$$ 這叫<strong>第一宇宙速度</strong>，約時速 28000 公里，繞地球一圈約 84 分鐘。</p>
+          <p>速度達到 $\sqrt{2}$ 倍，約 11.2 km/s，砲彈就再也回不來，叫<strong>脫離速度</strong>。速度介於兩者之間時，軌道是橢圓，這正好就是克卜勒第一定律。</p>
+          <p class="text-sm text-slate-400">註：模擬中山的高度有誇張放大（約地球半徑的 1/10），所以剛好繞圈的速度顯示為 7.5 km/s，脫離速度顯示約 10.7 km/s（地表真實值分別是 7.9 和 11.2 km/s）。這張砲彈山的圖出自牛頓的《宇宙體系》（寫於 1680 年代，1728 年出版）。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：<u>月亮一直在往地球掉</u>，只是它跑得夠快，所以永遠掉不到地面。蘋果和月亮是同一個原因。</div>
+    </section>
+
+    <!-- 6 月球檢驗 -->
+    <section id="g6" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-orange-500/15 text-orange-300 border-orange-500/30">6</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">月球檢驗：距離 60 倍，拉力剩 1/3600</h2><span class="era border-orange-500/30 text-orange-300 bg-orange-500/10">1666 初算 → 1687 定案</span></div>
+        <p class="text-sm text-slate-400">如果拉蘋果和拉月亮的是同一個力，它應該隨距離變弱。變弱多少？牛頓用數字檢查。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-moon" width="900" height="400" class="sim-canvas"></canvas>
+        <div class="flex items-center gap-3 text-sm"><span class="shrink-0">離地心的距離 ＝ 地球半徑的</span><input id="moon-n" type="range" min="1" max="60" step="1" value="1"><span id="moon-n-val" class="mono shrink-0 w-12 text-right text-orange-300">1 倍</span></div>
+        <div class="flex flex-wrap gap-2"><button class="btn" data-n="1">🍎 地面（1 倍）</button><button class="btn" data-n="2">2 倍</button><button class="btn" data-n="3">3 倍</button><button class="btn" data-n="10">10 倍</button><button class="btn" data-n="60">🌕 月球（60 倍）</button></div>
+        <div id="moon-cap" class="caption"></div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        月球離地心的距離大約是地球半徑的 <strong>60 倍</strong>。如果引力隨距離「平方」變弱，月球受到的拉力只剩 1/(60×60) ＝ <strong>1/3600</strong>。<br>
+        地面上的蘋果第一秒掉 4.9 公尺；月球每秒只「掉」約 <strong>1.4 毫米</strong>。牛頓在 1666 年左右就做過初步計算，但當時用的地球半徑不準，只「大致」接近。到了 1687 年的《原理》，用了更準的地球大小，答案才漂亮吻合！
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        為什麼是「平方」反比？先打個<strong>比方</strong>（這是幫助想像的類比，不是牛頓的推導）：想像引力像燈泡發出的光，往四面八方散開。距離 2 倍時，同樣的光要鋪滿 <strong>4 倍</strong>大的球面，所以每一塊只分到 1/4。距離 3 倍 → 9 倍大的面積 → 1/9。拉動滑桿，看看是不是這樣。<br>牛頓真正的推導，是從克卜勒第三定律出發（見下方資優延伸）。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：兩種方法算月球的加速度</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p><strong>方法一：平方反比預測</strong> $$a = \frac{g}{60^2} = \frac{9.8}{3600} \approx 0.00272\ \text{m/s}^2$$</p>
+          <p><strong>方法二：從月球的實際運動算</strong>（月地距離 $r = 3.84\times10^8$ m，公轉週期 $T = 27.3$ 天 $= 2.36\times10^6$ s，用圓周運動的 $a = v^2/r = 4\pi^2 r/T^2$）： $$a = \frac{4\pi^2 \times 3.84\times10^8}{(2.36\times10^6)^2} \approx 0.00272\ \text{m/s}^2$$</p>
+          <p>一個來自<strong>地面的落體</strong>，一個來自<strong>天上的公轉</strong>，兩條獨立的線索，答案卻一樣。這就是「拉蘋果的力＝拉月亮的力」最有力的證據。</p>
+          <p class="text-sm text-slate-400">細節：這個比較要把地球當成「質量全部集中在地心」，距離才能從地心算起。牛頓得先證明「球殼定理」（約 1685 年）才能這樣做，一般認為這是他多年後才發表的原因之一。</p>
+          <p><strong>從克卜勒第三定律推平方反比：</strong>圓軌道上 $F = \dfrac{4\pi^2 m r}{T^2}$，代入 $T^2 = k r^3$，得 $F = \dfrac{4\pi^2 m}{k}\cdot\dfrac{1}{r^2}$，<strong>正好是平方反比</strong>。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：引力跟<u>距離的平方成反比</u>；用月球的運動驗證，數字完全吻合。</div>
+    </section>
+
+    <!-- 7 萬有引力定律 -->
+    <section id="g7" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-purple-500/15 text-purple-300 border-purple-500/30">7</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">萬有引力定律：任何兩個物體都互相吸引</h2><span class="era border-purple-500/30 text-purple-300 bg-purple-500/10">1687 年・《原理》</span></div>
+        <p class="text-sm text-slate-400">不只地球拉蘋果，<strong>蘋果也拉地球</strong>；你和你的同桌之間，也有引力。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-ug" width="900" height="340" class="sim-canvas"></canvas>
+        <div class="text-sm text-slate-400 -mt-1">👆 直接用手指或滑鼠<strong>左右拖曳球</strong>，改變距離。</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div><div class="flex justify-between"><span>A 的質量</span><span id="ug-m1-val" class="mono text-sky-300">2</span></div><input id="ug-m1" type="range" min="1" max="5" step="1" value="2"></div>
+          <div><div class="flex justify-between"><span>B 的質量</span><span id="ug-m2-val" class="mono text-pink-300">2</span></div><input id="ug-m2" type="range" min="1" max="5" step="1" value="2"></div>
+        </div>
+        <div id="ug-cap" class="caption"></div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        <strong>質量越大，引力越大；距離越遠，引力越小。</strong>注意兩支紅色箭頭<strong>永遠一樣長、方向相反</strong>：A 拉 B 多大，B 就拉 A 多大。這就是<a class="underline text-sky-300" href="https://sunny30119.github.io/newton-laws-history/">牛頓第三定律</a>。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        地球拉蘋果、蘋果拉地球，兩個力一樣大，為什麼只有蘋果在動？因為地球的質量大得驚人。同樣大小的力，推動質量大的東西，加速度就極小（牛頓第二定律）。<br>
+        那為什麼我們感覺不到同學的引力？因為一般物體的質量太小了。兩個 60 公斤的同學相距 1 公尺，引力只有約 0.00000024 牛頓，大約是 <strong>0.02 毫克</strong>東西的重量。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：萬有引力公式</summary>
+        <div class="inner text-slate-300 space-y-2">
+          $$F = G\,\frac{m_1 m_2}{r^2},\qquad G = 6.67\times10^{-11}\ \text{N·m}^2/\text{kg}^2$$
+          <p>白話：引力 ＝ 一個很小的常數 × 兩個質量相乘 ÷ 距離平方。</p>
+          <ul class="list-disc pl-6 space-y-1">
+            <li>兩位 60 kg 同學相距 1 m：$F = 6.67\times10^{-11}\times 60\times60/1^2 \approx 2.4\times10^{-7}$ N</li>
+            <li>地球（$6.0\times10^{24}$ kg）拉一位 60 kg 同學（距地心 $6.37\times10^6$ m）：$F \approx 590$ N，就是他的體重</li>
+          </ul>
+          <p>$G$ 太小了，所以只有像星球這麼大的質量，引力才明顯。$G$ 也一直沒人量得出來，直到第 8 節。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：<u>任何兩個物體都互相吸引</u>：質量越大越強，距離越遠越弱，而且兩邊的力一樣大。</div>
+    </section>
+
+    <!-- 8 卡文迪許 -->
+    <section id="g8" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-teal-500/15 text-teal-300 border-teal-500/30">8</div>
+        <div class="grow"><div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-extrabold">卡文迪許：在實驗室裡「秤地球」</h2><span class="era border-teal-500/30 text-teal-300 bg-teal-500/10">1798 年・精密實驗</span></div>
+        <p class="text-sm text-slate-400">牛頓死後 70 年，卡文迪許用一根細絲，量到了兩顆鉛球之間微弱的引力。</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-cav" width="900" height="400" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2">
+          <button id="cav-toggle" class="btn btn-go">⬇ 把大鉛球移近</button>
+          <button id="cav-reset" class="btn">↺ 重來</button>
+        </div>
+        <div id="cav-cap" class="caption">俯視圖：一根細絲吊著一根桿子，兩端有小鉛球。按按鈕把兩顆大鉛球移近。</div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        大鉛球吸引小鉛球，桿子就被扭轉一點點。扭轉角度太小，肉眼看不到。卡文迪許在桿子兩端裝了精細的刻度，人在密室外用<strong>望遠鏡</strong>讀數。動畫用的是<strong>現代教室版</strong>：在細絲上裝小鏡子反射光，桿子轉一點點，牆上的光點就移動一大段。<strong>用這種方法，就能量出兩顆鉛球之間的引力有多大。</strong>
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        為什麼叫「秤地球」？因為我們早就知道地球拉 1 公斤的東西用多大的力（9.8 牛頓），也知道地球多大。只差一個數字：<strong>引力本身有多強</strong>（今天叫 G）。卡文迪許論文的目標是「測定地球的密度」（他得到 5.48 g/cm³），用今天的語言說，他的實驗<strong>等於量出了 G</strong>，地球的質量也就算得出來了。（這套扭秤原本由米歇爾設計，他過世後由卡文迪許完成實驗。）<br>
+        這個實驗有多精細？桿子會被溫度變化產生的氣流干擾，所以卡文迪許把儀器關在密室裡，人在外面用望遠鏡讀數。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：從 G 算出地球質量</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>大鉛球 158 kg、小鉛球 0.73 kg、球心相距約 0.23 m： $$F = 6.67\times10^{-11}\times\frac{158\times0.73}{0.23^2} \approx 1.5\times10^{-7}\ \text{N}$$ 大約是 0.015 毫克東西的重量。</p>
+          <p>地面上 $mg = G\dfrac{Mm}{R^2}$，所以 $$M = \frac{gR^2}{G} = \frac{9.8\times(6.37\times10^6)^2}{6.67\times10^{-11}} \approx 6.0\times10^{24}\ \text{kg}$$</p>
+          <p>算出地球質量，除以體積，地球平均密度約 5.5 g/cm³，是表面岩石（約 2.7）的兩倍。這告訴我們：<strong>地球內部一定比表面重很多</strong>。在實驗室裡量一根細絲，就推論出地球內部的樣子，這是物理學很漂亮的一刻。（地心是鐵鎳組成，要到 1890 到 1930 年代才由地震波研究確認。）</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：卡文迪許在實驗室量到兩顆鉛球之間的微弱引力，因此<u>算出了地球的密度與質量</u>。</div>
+    </section>
+
+    <!-- 9 迷思 -->
+    <section id="g9" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-rose-500/15 text-rose-300 border-rose-500/30">9</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">迷思破解：太空中沒有重力？</h2>
+        <p class="text-sm text-slate-400">太空人在太空站裡飄來飄去，是因為「太空沒有重力」嗎？</p></div>
+      </div>
+      <div class="card space-y-4">
+        <canvas id="cv-space" width="900" height="380" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2" id="space-btns"></div>
+        <div id="space-cap" class="caption"></div>
+      </div>
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        國際太空站離地面約 400 公里，那裡的重力還有地面的 <strong>89%</strong>！太空人會飄，不是因為沒有重力，而是因為<strong>太空站和太空人一起在「掉」</strong>（就像第 5 節的砲彈），彼此之間沒有推擠，所以看起來像沒有重量。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        想像你在一台纜線斷掉、正在自由落下的電梯裡：你、電梯、你手上的手機一起往下掉，掉得一樣快。手機放開也不會「掉到地板」，因為地板也在掉，於是它就飄在你面前。這叫<strong>失重</strong>：重力還在，只是你感覺不到。<br>
+        太空站以每秒約 7.7 公里往前跑，同時一直往地球掉，掉不到地面，就是繞地球轉。
+      </div>
+      <div class="takeaway">💡 一句話帶走：太空中<u>有重力</u>；太空人飄浮是因為和太空站<u>一起在自由落下</u>。</div>
+    </section>
+
+    <!-- 10 總結 -->
+    <section id="g10" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-indigo-500/15 text-indigo-300 border-indigo-500/30">✦</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">科學思維的三大跨越</h2>
+        <p class="text-sm text-slate-400">回到開頭的問題：蘋果和月亮，是同一個原因嗎？答案是：<strong class="text-white">是。</strong></p></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card"><div class="text-xs text-slate-400 mb-1">跨越一</div><div class="font-black text-lg text-amber-300 mb-2">天地兩界 → 天地同律</div><p class="text-sm text-slate-300 leading-relaxed">亞里斯多德把世界分成天上和地上。牛頓證明：讓蘋果落下和讓月亮繞地球的，是<strong>同一個力</strong>。宇宙各處遵守同一套規則。</p></div>
+        <div class="card"><div class="text-xs text-slate-400 mb-1">跨越二</div><div class="font-black text-lg text-emerald-300 mb-2">描述「怎麼動」→ 解釋「為什麼」</div><p class="text-sm text-slate-300 leading-relaxed">克卜勒描述了行星怎麼走。牛頓用一條萬有引力定律＋三大運動定律，<strong>推導出</strong>克卜勒的三條定律。一條原因，解釋所有現象。</p></div>
+        <div class="card"><div class="text-xs text-slate-400 mb-1">跨越三</div><div class="font-black text-lg text-sky-300 mb-2">碰到才有力 → 隔空也有力</div><p class="text-sm text-slate-300 leading-relaxed">以前認為力要靠接觸。萬有引力隔著真空也能作用。牛頓在給友人的信中承認，隔空作用很難令人接受（1693）。後來他在《原理》第二版（1713）寫下「我不杜撰假說」：找不到引力的原因，就只說明引力<strong>怎麼算</strong>。</p></div>
+      </div>
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-indigo-950/60 to-slate-900 border border-indigo-800/60">
+        <div class="font-bold text-indigo-200 mb-1">🔭 下一個故事的伏筆</div>
+        <p class="text-slate-300 text-sm leading-relaxed">「引力到底是什麼？為什麼能隔空作用？」這個問題懸了 200 多年。1915 年，<strong>愛因斯坦</strong>給了全新的答案：質量會讓周圍的時空<strong>彎曲</strong>，物體只是沿著彎曲的時空走。不過那是另一個故事了。</p>
+      </div>
+    </section>
+
+    <!-- 小測 -->
+    <section id="g11" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-amber-500/15 text-amber-300 border-amber-500/30">?</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">小測驗：帶得走嗎？</h2>
+        <p class="text-sm text-slate-400">點選答案，馬上看解析。⭐ 是挑戰題。</p></div>
+      </div>
+      <div id="quiz" class="space-y-4"></div>
+      <div id="quiz-score" class="caption text-center font-bold"></div>
+    </section>
+
+    <section id="downloads" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-slate-500/15 text-slate-300 border-slate-500/30"><i data-lucide="download" class="w-5 h-5"></i></div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">學習單下載</h2>
+        <p class="text-sm text-slate-400">一份兩用：基本題＋⭐ 挑戰題。</p></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3"><div class="font-bold text-lg">📝 學生版</div><div class="flex flex-wrap gap-2"><button class="btn" disabled>PDF（製作中）</button><button class="btn" disabled>Word（製作中）</button></div></div>
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3"><div class="font-bold text-lg">🔑 教師版（含答案與講解）</div><div class="flex flex-wrap gap-2"><button class="btn" disabled>PDF（製作中）</button><button class="btn" disabled>Word（製作中）</button></div></div>
+      </div>
+    </section>
+  </main>
+
+<script>
+/* ================= 共用工具 ================= */
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const COL = { v:'#38bdf8', v2:'#7dd3fc', a:'#fb923c', f:'#f87171', ball:'#e2e8f0', text:'#cbd5e1', dim:'#64748b', faint:'#334155', good:'#34d399', amber:'#fbbf24', purple:'#c084fc' };
+const FONT = '"Noto Sans TC", sans-serif';
+
+function setup(id) {
+  const c = document.getElementById(id);
+  const W = +c.getAttribute('width'), H = +c.getAttribute('height');
+  c.width = W * DPR; c.height = H * DPR;
+  c.style.aspectRatio = W + ' / ' + H;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { c, ctx, W, H };
+}
+function arrow(ctx, x1, y1, x2, y2, o = {}) {
+  const col = o.color || '#fff', w = o.w || 3, hl = o.head || 12;
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+  if (L < 2) return;
+  const ux = dx / L, uy = dy / L, h = Math.min(hl, L * 0.6);
+  ctx.save();
+  ctx.globalAlpha = o.alpha ?? 1;
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (o.glow) { ctx.shadowColor = COL.amber; ctx.shadowBlur = 18; }
+  if (o.dash) ctx.setLineDash([8, 6]);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * h * 0.7, y2 - uy * h * 0.7); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - ux * h - uy * h * 0.5, y2 - uy * h + ux * h * 0.5);
+  ctx.lineTo(x2 - ux * h + uy * h * 0.5, y2 - uy * h - ux * h * 0.5);
+  ctx.closePath();
+  if (o.dash) { ctx.lineWidth = 2; ctx.stroke(); } else ctx.fill();
+  if (o.label) {
+    ctx.shadowBlur = 0;
+    ctx.font = `bold ${o.size || 15}px ${FONT}`;
+    ctx.fillStyle = o.labelColor || col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const off = o.lo ?? 20, lx = x2 + ux * off + (o.lox || 0), ly = y2 + uy * off + (o.loy || 0);
+    const tw = ctx.measureText(o.label).width, th = (o.size || 15) + 6;
+    ctx.globalAlpha = (o.alpha ?? 1) * 0.75; ctx.fillStyle = '#020617';
+    ctx.beginPath(); ctx.roundRect(lx - tw / 2 - 4, ly - th / 2, tw + 8, th, 5); ctx.fill();
+    ctx.globalAlpha = o.alpha ?? 1; ctx.fillStyle = o.labelColor || col;
+    ctx.fillText(o.label, lx, ly);
+  }
+  ctx.restore();
+}
+function txt(ctx, s, x, y, o = {}) {
+  ctx.save();
+  ctx.globalAlpha = o.alpha ?? 1;
+  ctx.font = `${o.bold === false ? '' : 'bold '}${o.size || 15}px ${FONT}`;
+  ctx.fillStyle = o.color || COL.text; ctx.textAlign = o.align || 'center'; ctx.textBaseline = o.base || 'middle';
+  ctx.fillText(s, x, y);
+  ctx.restore();
+}
+function dot(ctx, x, y, r, fill, stroke, glow) {
+  ctx.save();
+  if (glow) { ctx.shadowColor = COL.amber; ctx.shadowBlur = 20; }
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.lineWidth = 2; ctx.strokeStyle = stroke; ctx.stroke(); }
+  ctx.restore();
+}
+function ring(ctx, x, y, r, color, w = 1.5, dash) {
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w;
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+}
+function line(ctx, x1, y1, x2, y2, color, w = 2, dash) {
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore();
+}
+function polyline(ctx, pts, color, w = 2, dash, alpha = 1) {
+  if (pts.length < 2) return;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineJoin = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.stroke(); ctx.restore();
+}
+const ease = p => p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+const lerp = (a, b, p) => a + (b - a) * p;
+const $ = id => document.getElementById(id);
+
+/* 只更新畫面上看得到的模擬，省電 */
+const sims = [];
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { e.target._vis = e.isIntersecting; });
+  sims.forEach(s => { s.vis = s.els.some(el => el._vis); });
+});
+function register(els, tick) { const s = { els, tick, vis: false }; sims.push(s); els.forEach(el => io.observe(el)); tick(0); return s; }
+let lastT = performance.now();
+function loop(t) { const dt = Math.min(0.05, (t - lastT) / 1000); lastT = t; sims.forEach(s => { if (s.vis) s.tick(dt); }); requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+
+/* 一組按鈕裡只有一顆被選取 */
+function selectIn(selector, btn) { document.querySelectorAll(selector).forEach(b => b.classList.toggle('sel', b === btn)); }
+
+
+
+/* 星空背景（固定亂數） */
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function makeStars(n, W, H, seed) { const r = rng(seed); return Array.from({ length: n }, () => ({ x: r() * W, y: r() * H, s: r() * 1.4 + 0.3, a: r() * 0.6 + 0.2 })); }
+function drawStars(ctx, stars) { stars.forEach(st => { ctx.globalAlpha = st.a; ctx.fillStyle = '#fff'; ctx.fillRect(st.x, st.y, st.s, st.s); }); ctx.globalAlpha = 1; }
+function earth(ctx, x, y, r) {
+  const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
+  g.addColorStop(0, '#60a5fa'); g.addColorStop(1, '#1e3a8a');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = '#16a34a88';
+  ctx.beginPath(); ctx.ellipse(x - r * 0.3, y - r * 0.1, r * 0.35, r * 0.22, 0.6, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x + r * 0.35, y + r * 0.3, r * 0.25, r * 0.15, -0.4, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+function moonDot(ctx, x, y, r) { dot(ctx, x, y, r, '#9ca3af', '#d1d5db'); dot(ctx, x - r * 0.3, y - r * 0.2, r * 0.22, '#6b7280'); dot(ctx, x + r * 0.3, y + r * 0.3, r * 0.15, '#6b7280'); }
+function apple(ctx, x, y, r = 10) { dot(ctx, x, y, r, '#dc2626', '#fca5a5'); line(ctx, x, y - r, x + 2, y - r - 6, '#78350f', 2); ctx.fillStyle = '#16a34a'; ctx.beginPath(); ctx.ellipse(x + 6, y - r - 4, 5, 2.5, -0.5, 0, Math.PI * 2); ctx.fill(); }
+
+/* ================= 0 開場 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-open');
+  const stars = makeStars(60, W, H, 7);
+  let ay = 0, av = 0, dropping = false, th = 0;
+  const TREE = { x: 200, y: 90 }, GROUND = 260;
+  $('open-drop').onclick = () => { ay = 0; av = 0; dropping = true; };
+  register([c], dt => {
+    th += dt * 0.5;
+    if (dropping) { av += 600 * dt; ay += av * dt; if (TREE.y + 40 + ay >= GROUND - 10) { ay = GROUND - 10 - TREE.y - 40; dropping = false; } }
+    ctx.clearRect(0, 0, W, H);
+    // 左：蘋果樹
+    ctx.fillStyle = '#14532d55'; ctx.fillRect(0, GROUND, 450, H - GROUND);
+    line(ctx, 0, GROUND, 450, GROUND, '#166534', 2);
+    ctx.fillStyle = '#78350f'; ctx.fillRect(TREE.x - 8, TREE.y + 20, 16, GROUND - TREE.y - 20);
+    ctx.fillStyle = '#15803d'; ctx.beginPath(); ctx.arc(TREE.x, TREE.y, 60, 0, Math.PI * 2); ctx.fill();
+    apple(ctx, TREE.x + 30, TREE.y + 40 + ay);
+    txt(ctx, '地上：蘋果掉下來', 225, 24, { color: '#86efac', size: 16 });
+    // 右：月亮
+    ctx.save(); ctx.beginPath(); ctx.rect(450, 0, 450, H); ctx.clip(); drawStars(ctx, stars); ctx.restore();
+    line(ctx, 450, 10, 450, H - 10, '#1e293b', 1.5);
+    const E = { x: 675, y: 165 };
+    ring(ctx, E.x, E.y, 110, COL.faint, 1.5, [5, 6]);
+    earth(ctx, E.x, E.y, 34);
+    moonDot(ctx, E.x + 110 * Math.cos(th), E.y - 110 * Math.sin(th), 12);
+    txt(ctx, '天上：月亮一直繞，從不掉下來', 675, 24, { color: '#c4b5fd', size: 16 });
+  });
+})();
+
+/* ================= 1 亞里斯多德兩個世界 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-two');
+  const stars = makeStars(80, W, 140, 3);
+  const SPLIT = 140, GROUND = 320;
+  let th = 0, ap = null, st = null;
+  $('two-apple').onclick = () => { ap = { y: 252, v: 0 }; };
+  $('two-stone').onclick = () => { st = { t: 0, trail: [], real: [] }; };
+  register([c], dt => {
+    th += dt * 0.6;
+    ctx.clearRect(0, 0, W, H);
+    // 天界
+    ctx.fillStyle = '#1e1b4b66'; ctx.fillRect(0, 0, W, SPLIT);
+    drawStars(ctx, stars);
+    line(ctx, 0, SPLIT, W, SPLIT, '#a78bfa', 2, [10, 6]);
+    txt(ctx, '月上界（天界）：以太構成・完美・永恆・只做圓周運動', 20, 22, { align: 'left', color: '#c4b5fd', size: 15 });
+    txt(ctx, '⬆ 天界　　━ ━ 月球天球（分界線）━ ━　　地界 ⬇', W / 2, SPLIT + 16, { color: '#a78bfa', size: 13 });
+    for (let i = 0; i < 3; i++) { const a = th * (1 - i * 0.25) + i * 2; const cx = 200 + i * 250; ring(ctx, cx, 80, 36, '#4c1d95', 1, [3, 4]); dot(ctx, cx + 36 * Math.cos(a), 80 - 36 * Math.sin(a) * 0.5, 6, ['#fde68a', '#d1d5db', '#fca5a5'][i]); }
+    // 地界
+    ctx.fillStyle = '#14532d44'; ctx.fillRect(0, GROUND, W, H - GROUND);
+    line(ctx, 0, GROUND, W, GROUND, '#166534', 2);
+    txt(ctx, '月下界（地界）：土水火氣・會改變・東西回到「自然位置」就停下', 20, SPLIT + 44, { align: 'left', color: '#86efac', size: 15 });
+    // 蘋果
+    ctx.fillStyle = '#78350f'; ctx.fillRect(134, 245, 12, GROUND - 245);
+    ctx.fillStyle = '#15803d'; ctx.beginPath(); ctx.arc(140, 232, 30, 0, Math.PI * 2); ctx.fill();
+    if (ap) { if (ap.y < GROUND - 10) { ap.v += 500 * dt; ap.y = Math.min(GROUND - 10, ap.y + ap.v * dt); } apple(ctx, 175, ap.y); if (ap.y >= GROUND - 10) txt(ctx, '回到自然位置，停！', 175, GROUND + 22, { color: '#fca5a5', size: 13 }); }
+    else apple(ctx, 175, 252);
+    // 丟石頭的人
+    const PX = 330, PY = 260;
+    dot(ctx, PX, PY - 30, 8, '#fde68a'); line(ctx, PX, PY - 22, PX, PY + 20, '#fde68a', 3); line(ctx, PX, PY + 20, PX - 10, GROUND, '#fde68a', 3); line(ctx, PX, PY + 20, PX + 10, GROUND, '#fde68a', 3); line(ctx, PX, PY - 10, PX + 18, PY - 18, '#fde68a', 3);
+    if (st) {
+      st.t += dt;
+      // 亞里斯多德想像：先直線（強迫運動）再直直落下（自然運動）
+      const v = 260, tf = 1.2, sx = PX + 22, sy = PY - 20;
+      let ax, ay;
+      if (st.t < tf) { ax = sx + v * st.t; ay = sy; } else { ax = sx + v * tf; ay = Math.min(GROUND - 7, sy + 300 * (st.t - tf)); }
+      st.trail.push({ x: ax, y: ay });
+      polyline(ctx, st.trail, '#fbbf24', 2.5, [6, 5]);
+      dot(ctx, ax, ay, 7, '#a8a29e', '#e7e5e4');
+      txt(ctx, '中世紀衝力說的想像：先直走，力用完了再直直掉', sx + 160, sy - 20, { color: '#fbbf24', size: 13 });
+      if ($('two-real').checked) {
+        const g = 540, vr = 260, pts = [];
+        for (let s = 0; s <= st.t; s += 0.01) { const y = sy + 0.5 * g * s * s; if (y > GROUND - 7) break; pts.push({ x: sx + vr * s, y }); }
+        polyline(ctx, pts, '#ffffff', 3);
+        if (pts.length) { const e = pts[pts.length - 1]; dot(ctx, e.x, e.y, 7, '#fff'); txt(ctx, '真實路線：一條彎曲的線', e.x + 10, e.y - 18, { align: 'left', color: '#fff', size: 13 }); }
+      }
+    }
+  });
+})();
+
+/* ================= 2 火星逆行 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-retro');
+  const AU = 78, O = { x: 225, y: 220 }, TM = 1.881, RM = 1.524, INC = 1.85 * Math.PI / 180, YEAR = 8, T0 = 1.75, T1 = 2.6, LC = 50 * Math.PI / 180, WIN = 100 * Math.PI / 180;
+  const SKY = { x: 470, y: 60, w: 410, h: 320 };
+  const stars = makeStars(70, SKY.w, SKY.h, 11);
+  let t = T0, playing = true, model = 'cop', sky = [], geo = [];
+  const cap = $('retro-cap'), btn = $('retro-play');
+  const CAPS = {
+    cop: '<strong>哥白尼的模型：</strong>太陽在中心，地球（藍）跑內圈、一年一圈；火星（紅）跑外圈、約 1.9 年一圈。白色細線是「從地球望向火星的視線」，視線指到的星空位置，就畫在右邊。',
+    pto: '<strong>托勒密的模型：</strong>地球在中心不動。火星在一個小圓（<span class="text-amber-300">本輪</span>）上轉，小圓的中心沿著大圓（<span class="text-sky-300">均輪</span>）繞地球。連太陽也繞著地球轉。看右邊的天空，軌跡和哥白尼的<strong>一模一樣</strong>。'
+  };
+  document.querySelectorAll('[data-model]').forEach(b => b.onclick = () => { selectIn('[data-model]', b); model = b.dataset.model; geo = []; cap.innerHTML = CAPS[model]; });
+  btn.onclick = () => { playing = !playing; btn.textContent = playing ? '⏸ 暫停' : '▶ 播放'; };
+  $('retro-reset').onclick = () => { t = T0; sky = []; geo = []; };
+  cap.innerHTML = CAPS.cop;
+  const pos = (r, T, tt) => ({ x: r * Math.cos(2 * Math.PI * tt / T), y: r * Math.sin(2 * Math.PI * tt / T) });
+  const toC = p => ({ x: O.x + p.x * AU, y: O.y - p.y * AU });
+  function skyPoint(tt) {
+    const E = pos(1, 1, tt), M = pos(RM, TM, tt);
+    const dx = M.x - E.x, dy = M.y - E.y, d = Math.hypot(dx, dy);
+    const lam = Math.atan2(dy, dx), z = RM * Math.sin(INC) * Math.sin(2 * Math.PI * tt / TM - 0.6);
+    return { lam, beta: Math.atan2(z, d) };
+  }
+  register([c], dt => {
+    if (playing) {
+      const prev = skyPoint(t);
+      const slow = sky.length && sky[sky.length - 1].retro ? 0.4 : 1;
+      t += dt * slow / YEAR;
+      if (t > T1) { t = T0; sky = []; geo = []; }
+      const now = skyPoint(t);
+      let dl = now.lam - prev.lam; if (dl > Math.PI) dl -= 2 * Math.PI; if (dl < -Math.PI) dl += 2 * Math.PI;
+      sky.push({ lam: now.lam, beta: now.beta, retro: dl < 0 });
+      if (sky.length > 1400) sky.shift();
+      const E = pos(1, 1, t), M = pos(RM, TM, t);
+      geo.push({ x: M.x - E.x, y: M.y - E.y }); if (geo.length > 900) geo.shift();
+    }
+    ctx.clearRect(0, 0, W, H);
+    const E = pos(1, 1, t), M = pos(RM, TM, t);
+    if (model === 'cop') {
+      ring(ctx, O.x, O.y, AU, '#1e3a8a', 1.5, [4, 5]); ring(ctx, O.x, O.y, RM * AU, '#7f1d1d', 1.5, [4, 5]);
+      dot(ctx, O.x, O.y, 13, '#facc15', '#fde68a'); txt(ctx, '太陽', O.x, O.y + 26, { color: '#fde68a', size: 13 });
+      const e = toC(E), m = toC(M);
+      const dx = m.x - e.x, dy = m.y - e.y, L = Math.hypot(dx, dy);
+      line(ctx, e.x, e.y, e.x + dx / L * 260, e.y + dy / L * 260, '#ffffff55', 1.5);
+      dot(ctx, e.x, e.y, 8, '#3b82f6', '#93c5fd'); txt(ctx, '地球', e.x, e.y + 18, { color: '#93c5fd', size: 12 });
+      dot(ctx, m.x, m.y, 7, '#ef4444', '#fca5a5'); txt(ctx, '火星', m.x, m.y - 16, { color: '#fca5a5', size: 12 });
+    } else {
+      polyline(ctx, geo.map(toC), '#ef444488', 1.5);
+      ring(ctx, O.x, O.y, RM * AU, '#0c4a6e', 1.5, [4, 5]);
+      const D = toC(M), m = toC({ x: M.x - E.x, y: M.y - E.y }), S = toC({ x: -E.x, y: -E.y });
+      ring(ctx, O.x, O.y, AU, '#78350f', 1, [2, 6]);
+      line(ctx, O.x, O.y, D.x, D.y, '#38bdf866', 1.5);
+      ring(ctx, D.x, D.y, AU, '#f59e0b', 1.5);
+      line(ctx, D.x, D.y, m.x, m.y, '#f59e0b88', 1.5);
+      dot(ctx, D.x, D.y, 3, '#f59e0b');
+      txt(ctx, '本輪', D.x, D.y - AU - 10, { color: '#fbbf24', size: 12 });
+      dot(ctx, S.x, S.y, 10, '#facc15', '#fde68a'); txt(ctx, '太陽', S.x, S.y + 20, { color: '#fde68a', size: 12 });
+      earth(ctx, O.x, O.y, 11); txt(ctx, '地球（不動）', O.x, O.y + 22, { color: '#93c5fd', size: 12 });
+      dot(ctx, m.x, m.y, 7, '#ef4444', '#fca5a5'); txt(ctx, '火星', m.x + 16, m.y - 12, { color: '#fca5a5', size: 12 });
+      txt(ctx, '均輪', O.x + RM * AU * 0.72, O.y - RM * AU * 0.72 - 8, { color: '#38bdf8', size: 12 });
+    }
+    txt(ctx, model === 'cop' ? '從太陽系上方看' : '托勒密：地球在中心', 20, 22, { align: 'left', color: COL.dim, size: 14 });
+    // 天空
+    ctx.save(); ctx.fillStyle = '#020617'; ctx.strokeStyle = '#334155'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(SKY.x, SKY.y, SKY.w, SKY.h, 10); ctx.fill(); ctx.stroke(); ctx.clip();
+    ctx.translate(SKY.x, SKY.y); drawStars(ctx, stars); ctx.restore();
+    txt(ctx, '從地球看到的天空（寬約 100°，上下放大）', SKY.x + SKY.w / 2, SKY.y - 18, { color: '#e2e8f0', size: 14 });
+    txt(ctx, '← 東', SKY.x + 8, SKY.y + SKY.h + 16, { align: 'left', color: COL.dim, size: 12 });
+    txt(ctx, '（面朝南方看天空）', SKY.x + SKY.w / 2, SKY.y + SKY.h + 16, { color: COL.dim, size: 12, bold: false });
+    txt(ctx, '西 →', SKY.x + SKY.w - 8, SKY.y + SKY.h + 16, { align: 'right', color: COL.dim, size: 12 });
+    const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
+    const sx = p => SKY.x + SKY.w / 2 - wrap(p.lam - LC) / WIN * SKY.w;
+    const sy = p => SKY.y + SKY.h / 2 - p.beta * 180 / Math.PI * 16;
+    ctx.save(); ctx.beginPath(); ctx.rect(SKY.x, SKY.y, SKY.w, SKY.h); ctx.clip();
+    for (let i = 1; i < sky.length; i++) {
+      const a = sky[i - 1], b = sky[i], x1 = sx(a), x2 = sx(b);
+      if (Math.abs(x1 - x2) > SKY.w / 2) continue;
+      line(ctx, x1, sy(a), x2, sy(b), b.retro ? '#f87171' : '#fca5a588', b.retro ? 3 : 2);
+    }
+    if (sky.length) { const p = sky[sky.length - 1]; dot(ctx, sx(p), sy(p), 6, '#ef4444', '#fff'); }
+    ctx.restore();
+    const retroNow = sky.length && sky[sky.length - 1].retro;
+    $('retro-info').innerHTML = `經過 ${(t - T0).toFixed(2)} 年　${retroNow ? '<span class="text-red-300">⟲ 火星正在倒退！（自動放慢）</span>' : '火星往東走'}`;
+  });
+})();
+
+/* ================= 3 克卜勒 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-kepler');
+  let tab = '1', e = 0.5, t = 0, myA = 3;
+  const S = { x: 470, y: 220 }, A = 200, PER = 8;
+  const cap = $('kep-cap');
+  const CAPS = {
+    '1': '綠線＋藍線＝行星到兩個焦點的距離。<strong>不管行星走到哪，兩條線加起來都一樣長</strong>，這就是橢圓的定義（像用一條繩子和兩根圖釘畫圖）。太陽在其中一個焦點，另一個焦點是空的。拉滑桿改變扁的程度。',
+    '2': '把一圈分成 12 段<strong>相同的時間</strong>，每段時間行星和太陽連線掃過一塊扇形。靠近太陽的扇形又短又胖，遠離太陽的又細又長，但<strong>每一塊面積都一樣大</strong>。所以靠近太陽時，行星必須跑得快。',
+    '3': '地球、火星、木星都畫在同一張圖上，時間一起跑。<strong>越外面的行星繞得越慢</strong>，不只是路比較長，速度本身也比較慢。拉滑桿放一顆「你的行星」，看它的週期。'
+  };
+  function solveE(M) { let E = M; for (let i = 0; i < 10; i++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); return E; }
+  function orbitPt(M, a = A) { const E = solveE(M), b = a * Math.sqrt(1 - e * e); return { x: S.x + a * (Math.cos(E) - e), y: S.y - b * Math.sin(E) }; }
+  function setTab(k) {
+    tab = k; t = 0; cap.innerHTML = CAPS[k];
+    $('kep-ctrl-e').classList.toggle('hidden', k === '3'); $('kep-ctrl-a').classList.toggle('hidden', k !== '3');
+  }
+  document.querySelectorAll('[data-kep]').forEach(b => b.onclick = () => { selectIn('[data-kep]', b); setTab(b.dataset.kep); });
+  $('kep-e').oninput = ev => { e = +ev.target.value; $('kep-e-val').textContent = e.toFixed(2); };
+  $('kep-a').oninput = ev => { myA = +ev.target.value; $('kep-a-val').textContent = myA.toFixed(1) + ' AU'; };
+  setTab('1');
+  const PL = [['水星', 0.387, 0.241], ['金星', 0.723, 0.615], ['地球', 1, 1], ['火星', 1.524, 1.881], ['木星', 5.203, 11.86], ['土星', 9.537, 29.45]];
+  $('kep-table').innerHTML = PL.map(([n, a, T]) => `<tr><td>${n}</td><td>${a}</td><td>${T}</td><td>${(T * T).toFixed(3)}</td><td>${(a * a * a).toFixed(3)}</td><td class="text-amber-300">${(T * T / (a * a * a)).toFixed(3)}</td></tr>`).join('');
+  function drawEllipse(a) { const b = a * Math.sqrt(1 - e * e); ctx.save(); ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.ellipse(S.x - a * e, S.y, a, b, 0, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+  function sun(x, y, r = 14) { dot(ctx, x, y, r, '#facc15', '#fde68a'); }
+  register([c], dt => {
+    t += dt;
+    ctx.clearRect(0, 0, W, H);
+    if (tab === '1' || tab === '2') {
+      const M = (2 * Math.PI * t / PER) % (2 * Math.PI);
+      drawEllipse(A);
+      if (tab === '2') {
+        const k = Math.floor(M / (Math.PI / 6));
+        for (let i = 0; i < 12; i++) {
+          const m0 = i * Math.PI / 6, m1 = i === k ? M : (i + 1) * Math.PI / 6;
+          if (i > k) continue;
+          ctx.beginPath(); ctx.moveTo(S.x, S.y);
+          for (let s = 0; s <= 24; s++) { const p = orbitPt(lerp(m0, m1, s / 24)); ctx.lineTo(p.x, p.y); }
+          ctx.closePath(); ctx.fillStyle = i === k ? '#fbbf2499' : (i % 2 ? '#6366f155' : '#22d3ee44'); ctx.fill();
+        }
+        txt(ctx, `已掃過 ${k} 塊，每一塊面積 ＝ 整個橢圓的 1/12`, 20, H - 20, { align: 'left', color: '#fde68a', size: 14 });
+      }
+      const p = orbitPt(M);
+      sun(S.x, S.y); txt(ctx, '太陽（焦點）', S.x, S.y + 28, { color: '#fde68a', size: 13 });
+      const F2 = { x: S.x - 2 * A * e, y: S.y };
+      if (tab === '1') {
+        dot(ctx, F2.x, F2.y, 5, null, '#94a3b8'); txt(ctx, '另一個焦點（空的）', F2.x, F2.y + 22, { color: '#94a3b8', size: 13 });
+        line(ctx, S.x, S.y, p.x, p.y, '#34d399', 2.5); line(ctx, F2.x, F2.y, p.x, p.y, '#38bdf8', 2.5);
+        const r1 = Math.hypot(p.x - S.x, p.y - S.y), r2 = Math.hypot(p.x - F2.x, p.y - F2.y);
+        txt(ctx, `綠 ${(r1 / 100).toFixed(2)} ＋ 藍 ${(r2 / 100).toFixed(2)} ＝ ${((r1 + r2) / 100).toFixed(2)}（永遠不變）`, 20, H - 20, { align: 'left', color: '#e2e8f0', size: 15 });
+      }
+      // 速度
+      const p2 = orbitPt(M + 0.01), vx = p2.x - p.x, vy = p2.y - p.y, vl = Math.hypot(vx, vy);
+      const r = Math.hypot(p.x - S.x, p.y - S.y), speed = Math.sqrt(2 / r - 1 / A);
+      arrow(ctx, p.x, p.y, p.x + vx / vl * speed * 700, p.y + vy / vl * speed * 700, { color: COL.v, w: 3 });
+      dot(ctx, p.x, p.y, 9, '#3b82f6', '#bfdbfe');
+      txt(ctx, `行星速率（相對）：${(speed / Math.sqrt(1 / A)).toFixed(2)}`, W - 20, 24, { align: 'right', color: COL.v2, size: 14 });
+      txt(ctx, tab === '1' ? '第一定律：行星沿橢圓走' : '第二定律：相同時間，掃過相同面積', 20, 24, { align: 'left', color: COL.dim, size: 14 });
+    } else {
+      const SC = 36, C3 = { x: 300, y: 220 };
+      sun(C3.x, C3.y, 10);
+      const list = [['地球', 1, '#3b82f6'], ['火星', 1.524, '#ef4444'], ['木星', 5.203, '#f59e0b'], ['你的行星', myA, '#ec4899']];
+      list.forEach(([n, a, col], i) => {
+        const T = Math.pow(a, 1.5), ang = 2 * Math.PI * (t / 2) / T + i;
+        ring(ctx, C3.x, C3.y, a * SC, col + '55', 1.5, i === 3 ? [3, 4] : null);
+        const x = C3.x + a * SC * Math.cos(ang), y = C3.y - a * SC * Math.sin(ang);
+        dot(ctx, x, y, i === 2 ? 9 : 6, col, '#fff');
+        txt(ctx, n, x, y - 14, { color: col, size: 12 });
+        const ty = 110 + i * 64;
+        txt(ctx, n, 560, ty, { align: 'left', color: col, size: 16 });
+        txt(ctx, `距離 ${a.toFixed(2)} AU`, 660, ty, { align: 'left', color: '#cbd5e1', size: 14, bold: false });
+        txt(ctx, `繞一圈 ${T.toFixed(2)} 年`, 790, ty, { align: 'left', color: '#cbd5e1', size: 14, bold: false });
+        const v = 1 / Math.sqrt(a);
+        ctx.fillStyle = '#1e293b'; ctx.fillRect(660, ty + 14, 220, 8); ctx.fillStyle = col; ctx.fillRect(660, ty + 14, 220 * v / 1.6, 8);
+        txt(ctx, '速率', 640, ty + 18, { align: 'right', color: COL.dim, size: 11, bold: false });
+      });
+      txt(ctx, '時間：地球每 2 秒繞一圈', 20, 24, { align: 'left', color: COL.dim, size: 14 });
+      txt(ctx, '（1 AU ＝ 地球到太陽的平均距離）', 20, H - 20, { align: 'left', color: COL.dim, size: 13 });
+    }
+  });
+})();
+
+/* ================= 4 伽利略與木星衛星 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-jup');
+  const MOONS = [['木衛一', 5.9, 1.769, '#fde047'], ['木衛二', 9.4, 3.551, '#e5e7eb'], ['木衛三', 15.0, 7.155, '#fdba74'], ['木衛四', 26.4, 16.69, '#a5b4fc']];
+  const PH0 = [0.3, 2.1, 4.0, 1.2], SC = 13.5, J = { x: 450, y: 70 };
+  let day = 0, log = [], reveal = false, tAnim = 0, shown = 0;
+  $('jup-table').innerHTML = MOONS.map(([n, a, T]) => `<tr><td>${n}</td><td>${a}</td><td>${T}</td><td class="text-amber-300">${(T * T / (a * a * a)).toFixed(4)}</td></tr>`).join('');
+  const ang = (i, d) => PH0[i] + 2 * Math.PI * d / MOONS[i][2];
+  function record() { log.push(day); if (log.length > 9) log.shift(); }
+  record();
+  $('jup-next').onclick = () => { day++; shown = day; record(); if (!reveal) $('jup-cap').innerHTML = `第 ${day + 1} 晚。亮點又換位置了，而且<strong>永遠在一條直線上</strong>，有時候在木星左邊、有時候在右邊、有時候不見了（躲到木星後面或前面）。`; };
+  $('jup-reveal').onclick = () => { reveal = !reveal; $('jup-reveal').textContent = reveal ? '📓 回到觀測紀錄' : '🔭 揭曉：從木星正上方看'; if (reveal) $('jup-cap').innerHTML = '從木星<strong>正上方</strong>看：四顆衛星其實在<strong>繞著木星轉圈</strong>！我們從側面看，圓就壓扁成一條線，所以看起來像在左右來回。動畫會一天一天地連續播放。'; };
+  $('jup-reset').onclick = () => { day = 0; shown = 0; log = []; record(); reveal = false; $('jup-reveal').textContent = '🔭 揭曉：從木星正上方看'; $('jup-cap').innerHTML = '按「看下一晚」，像伽利略一樣每晚記錄一次。'; };
+  function strip(y, d, big) {
+    const r = big ? 14 : 7;
+    MOONS.forEach(([n, a, T, col], i) => {
+      const th = ang(i, d), x = J.x + a * SC * Math.cos(th), behind = Math.sin(th) > 0 && Math.abs(x - J.x) < r + 2;
+      if (!behind) dot(ctx, x, y, big ? 4 : 3, col);
+    });
+    const g = ctx.createRadialGradient(J.x - r * 0.3, y - r * 0.3, 1, J.x, y, r);
+    g.addColorStop(0, '#fde68a'); g.addColorStop(1, '#b45309'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(J.x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  register([c], dt => {
+    ctx.clearRect(0, 0, W, H);
+    if (!reveal) {
+      txt(ctx, `🔭 望遠鏡視野：第 ${day + 1} 晚`, 20, 24, { align: 'left', color: '#e2e8f0', size: 15 });
+      ctx.fillStyle = '#020617'; ctx.beginPath(); ctx.roundRect(40, 40, W - 80, 60, 30); ctx.fill();
+      ring(ctx, J.x, J.y, 0.1, '#000');
+      strip(J.y, day, true);
+      txt(ctx, '📓 伽利略的觀測筆記', 20, 132, { align: 'left', color: '#fde68a', size: 15 });
+      log.forEach((d, k) => {
+        const y = 160 + k * 28;
+        txt(ctx, `第 ${d + 1} 晚`, 30, y, { align: 'left', color: COL.dim, size: 13, bold: false });
+        line(ctx, 100, y, W - 40, y, '#1e293b', 1);
+        strip(y, d, false);
+      });
+    } else {
+      tAnim += dt * 1.2;
+      const d = shown + tAnim, C = { x: 450, y: 215 };
+      txt(ctx, `從木星正上方看（第 ${(d + 1).toFixed(1)} 天）`, 20, 24, { align: 'left', color: '#e2e8f0', size: 15 });
+      MOONS.forEach(([n, a, T, col], i) => {
+        const r = a * SC * 0.6, th = ang(i, d);
+        ring(ctx, C.x, C.y, r, col + '44', 1.2, [3, 4]);
+        const x = C.x + r * Math.cos(th), y = C.y - r * Math.sin(th);
+        dot(ctx, x, y, 5, col); txt(ctx, n, x, y - 14, { color: col, size: 12 });
+      });
+      dot(ctx, C.x, C.y, 12, '#d97706', '#fde68a');
+      txt(ctx, '↓ 地球在這個方向（我們從側面看）', C.x, H - 18, { color: COL.dim, size: 13 });
+    }
+  });
+})();
+
+/* ================= 5 牛頓砲彈山 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-cannon');
+  const O = { x: 450, y: 225 }, RE = 100, R0 = 1.1, KMS = 7.9;
+  const stars = makeStars(90, W, H, 5);
+  let v0 = 0.6, shot = null, old = [];
+  const COLS = ['#fbbf24', '#34d399', '#38bdf8', '#f472b6', '#a78bfa'];
+  let colI = 0;
+  const cap = $('can-cap');
+  function setV(v) { v0 = v; $('can-v').value = v; $('can-v-val').textContent = (v * KMS).toFixed(1) + ' km/s'; }
+  setV(0.6);
+  $('can-v').oninput = e => setV(+e.target.value);
+  document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { setV(+b.dataset.v); fire(); });
+  $('can-clear').onclick = () => { old = []; };
+  $('can-fire').onclick = fire;
+  function fire() {
+    if (shot) old.push({ trail: shot.trail, col: shot.col });
+    if (old.length > 4) old.shift();
+    shot = { x: 0, y: R0, vx: v0, vy: 0, trail: [{ x: 0, y: R0 }], col: COLS[colI++ % COLS.length], done: false, t: 0, ang: 0, lastA: Math.PI / 2 };
+    cap.innerHTML = `發射速度 ${(v0 * KMS).toFixed(1)} km/s……`;
+  }
+  const toC = p => ({ x: O.x + p.x * RE, y: O.y - p.y * RE });
+  function step(h) {
+    const s = shot, r = Math.hypot(s.x, s.y), a = -1 / (r * r * r);
+    s.vx += a * s.x * h / 2; s.vy += a * s.y * h / 2;
+    s.x += s.vx * h; s.y += s.vy * h;
+    const r2 = Math.hypot(s.x, s.y), a2 = -1 / (r2 * r2 * r2);
+    s.vx += a2 * s.x * h / 2; s.vy += a2 * s.y * h / 2;
+  }
+  register([c], dt => {
+    if (shot && !shot.done) {
+      const N = 40, h = dt * 1.1 / N;
+      for (let i = 0; i < N && !shot.done; i++) {
+        step(h); shot.t += h;
+        const r = Math.hypot(shot.x, shot.y), A = Math.atan2(shot.y, shot.x);
+        let dA = A - shot.lastA; if (dA > Math.PI) dA -= 2 * Math.PI; if (dA < -Math.PI) dA += 2 * Math.PI;
+        shot.ang += dA; shot.lastA = A;
+        if (r <= 1) { shot.done = true; cap.innerHTML = `💥 落地！速度 ${(v0 * KMS).toFixed(1)} km/s 不夠快，地面還來不及彎下去，砲彈就掉到地上了。再快一點試試。`; }
+        else if (r > 7) {
+          shot.done = true;
+          const en = (shot.vx * shot.vx + shot.vy * shot.vy) / 2 - 1 / r;
+          cap.innerHTML = en >= 0
+            ? `🚀 飛走了！速度 ${(v0 * KMS).toFixed(1)} km/s 超過<strong>脫離速度</strong>，地球的引力再也拉不回它。`
+            : `🛸 飛出畫面了，但速度 ${(v0 * KMS).toFixed(1)} km/s 還沒到脫離速度，它會沿著一個<strong>很扁的橢圓</strong>繞回來。再快一點才會真的飛走。`;
+        }
+        else if (Math.abs(shot.ang) >= 2 * Math.PI) { shot.done = true; cap.innerHTML = Math.abs(v0 - 0.953) < 0.03 ? `🌕 繞了一整圈回到山頂！<strong>它一直在掉，卻永遠掉不到地面。</strong>月亮就是這樣繞著地球的。` : `🪐 繞了一圈，路線是<strong>橢圓</strong>：離地球遠的地方跑得慢，近的地方跑得快（就是克卜勒第一、第二定律！）。`; }
+      }
+      if (shot.trail.length < 6000) shot.trail.push({ x: shot.x, y: shot.y });
+    }
+    ctx.clearRect(0, 0, W, H);
+    drawStars(ctx, stars);
+    old.forEach(o => polyline(ctx, o.trail.map(toC), o.col, 2, null, 0.35));
+    earth(ctx, O.x, O.y, RE);
+    // 山
+    ctx.fillStyle = '#78716c'; ctx.beginPath(); ctx.moveTo(O.x - 24, O.y - RE + 3); ctx.lineTo(O.x, O.y - R0 * RE); ctx.lineTo(O.x + 24, O.y - RE + 3); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#e7e5e4'; ctx.fillRect(O.x - 4, O.y - R0 * RE - 6, 14, 6);
+    txt(ctx, '超高的山（高度有放大）', O.x + 30, O.y - R0 * RE - 12, { align: 'left', color: COL.dim, size: 12 });
+    if (shot) {
+      polyline(ctx, shot.trail.map(toC), shot.col, 3);
+      const p = toC(shot);
+      if (!shot.done && $('can-ghost').checked) {
+        const vl = Math.hypot(shot.vx, shot.vy);
+        line(ctx, p.x, p.y, p.x + shot.vx / vl * 160, p.y - shot.vy / vl * 160, '#94a3b8', 1.5, [6, 6]);
+        txt(ctx, '沒有引力會走的直線', p.x + shot.vx / vl * 170, p.y - shot.vy / vl * 170 - 10, { color: '#94a3b8', size: 12 });
+        const r = Math.hypot(shot.x, shot.y);
+        arrow(ctx, p.x, p.y, p.x - shot.x / r * 40, p.y + shot.y / r * 40, { color: COL.f, w: 3, label: '引力', lo: 14, size: 12 });
+      }
+      dot(ctx, p.x, p.y, 5, '#fff');
+    }
+    txt(ctx, '牛頓的思想實驗（《宇宙體系》）', 20, 24, { align: 'left', color: COL.dim, size: 14 });
+  });
+})();
+
+/* ================= 6 月球檢驗：平方反比 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-moon');
+  let n = 1;
+  const G0 = 9.8, cap = $('moon-cap');
+  const P = { x0: 70, x1: 520, y0: 340, y1: 60 };
+  function setN(v) { n = v; $('moon-n').value = v; $('moon-n-val').textContent = v + ' 倍'; upd(); }
+  $('moon-n').oninput = e => setN(+e.target.value);
+  document.querySelectorAll('[data-n]').forEach(b => b.onclick = () => setN(+b.dataset.n));
+  function fmtLen(m) { return m >= 1 ? m.toFixed(2) + ' 公尺' : m >= 0.01 ? (m * 100).toFixed(1) + ' 公分' : (m * 1000).toFixed(2) + ' 毫米'; }
+  function upd() {
+    const g = G0 / (n * n), d = 0.5 * g;
+    cap.innerHTML = `距離 ${n} 倍 → 引力變成 1/${n}² ＝ <strong>1/${n * n}</strong>　｜　每公斤受力 ${g < 0.1 ? g.toFixed(5) : g.toFixed(2)} 牛頓　｜　第一秒落下 <strong class="text-orange-300">${fmtLen(d)}</strong>` + (n === 60 ? '　🌕 這正是月球的位置！' : '');
+  }
+  setN(1);
+  register([c], dt => {
+    ctx.clearRect(0, 0, W, H);
+    // 曲線圖
+    line(ctx, P.x0, P.y0, P.x1, P.y0, '#475569', 1.5); line(ctx, P.x0, P.y0, P.x0, P.y1 - 10, '#475569', 1.5);
+    txt(ctx, '距離（地球半徑的幾倍）', (P.x0 + P.x1) / 2, P.y0 + 34, { color: COL.dim, size: 13 });
+    ctx.save(); ctx.translate(26, (P.y0 + P.y1) / 2); ctx.rotate(-Math.PI / 2); txt(ctx, '引力（地面＝1）', 0, 0, { color: COL.dim, size: 13 }); ctx.restore();
+    const X = v => P.x0 + (v - 1) / 59 * (P.x1 - P.x0), Y = f => P.y0 - f * (P.y0 - P.y1);
+    [1, 10, 20, 30, 40, 50, 60].forEach(v => txt(ctx, v, X(v), P.y0 + 14, { color: COL.dim, size: 11, bold: false }));
+    [0, 0.25, 0.5, 1].forEach(f => txt(ctx, f, P.x0 - 8, Y(f), { align: 'right', color: COL.dim, size: 11, bold: false }));
+    const pts = []; for (let v = 1; v <= 60; v += 0.1) pts.push({ x: X(v), y: Y(1 / (v * v)) });
+    polyline(ctx, pts, '#fb923c', 2.5);
+    const mx = X(n), my = Y(1 / (n * n));
+    line(ctx, mx, P.y0, mx, my, '#fb923c66', 1.5, [4, 4]);
+    dot(ctx, mx, my, 7, '#fff', '#fb923c');
+    txt(ctx, `1/${n * n}`, mx + 10, my - 14, { align: 'left', color: '#fdba74', size: 14 });
+    // 右側：一秒落下的對比
+    const RX = 600;
+    txt(ctx, '第一秒落下多少？', RX + 140, 40, { color: '#e2e8f0', size: 15 });
+    apple(ctx, RX + 40, 80); line(ctx, RX + 40, 92, RX + 40, 92 + 240, '#fca5a5', 3);
+    txt(ctx, '地面：4.9 公尺', RX + 40, 350, { color: '#fca5a5', size: 13 });
+    const d = 4.9 / (n * n), L = Math.max(2, 240 / (n * n));
+    moonDot(ctx, RX + 200, 80, 12);
+    arrow(ctx, RX + 200, 94, RX + 200, 94 + L, { color: '#fb923c', w: 3 });
+    txt(ctx, `${n} 倍處：${fmtLen(d)}`, RX + 200, 350, { color: '#fdba74', size: 13 });
+    txt(ctx, '（同一個比例尺）', RX + 140, 374, { color: COL.dim, size: 12, bold: false });
+  });
+})();
+
+/* ================= 7 萬有引力：拖曳 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-ug');
+  const Y = 180, UNIT = 110;
+  let xA = 260, xB = 590, m1 = 2, m2 = 2, drag = null;
+  const cap = $('ug-cap');
+  const rad = m => 12 + m * 6;
+  const d = () => (xB - xA) / UNIT;
+  const F = () => m1 * m2 / (d() * d());
+  const F0 = 4 / (3 * 3);
+  function upd() {
+    const ratio = F() / F0;
+    cap.innerHTML = `距離 ${d().toFixed(2)}　｜　質量 ${m1} 和 ${m2}　｜　引力是一開始的 <strong class="text-red-300">${ratio >= 10 ? ratio.toFixed(1) : ratio.toFixed(2)} 倍</strong>　｜　A 拉 B ＝ B 拉 A（兩支箭頭永遠一樣長）`;
+  }
+  $('ug-m1').oninput = e => { m1 = +e.target.value; $('ug-m1-val').textContent = m1; clampAll(); upd(); };
+  $('ug-m2').oninput = e => { m2 = +e.target.value; $('ug-m2-val').textContent = m2; clampAll(); upd(); };
+  function clampAll() { const gap = rad(m1) + rad(m2) + 10; if (xB - xA < gap) xB = Math.min(W - rad(m2) - 10, xA + gap); if (xB - xA < gap) xA = xB - gap; }
+  function toX(ev) { const r = c.getBoundingClientRect(); return (ev.clientX - r.left) * W / r.width; }
+  function toY(ev) { const r = c.getBoundingClientRect(); return (ev.clientY - r.top) * H / r.height; }
+  c.addEventListener('pointerdown', ev => {
+    const x = toX(ev), y = toY(ev);
+    if (Math.hypot(x - xA, y - Y) < rad(m1) + 20) drag = 'A'; else if (Math.hypot(x - xB, y - Y) < rad(m2) + 20) drag = 'B';
+    if (drag) { c.setPointerCapture(ev.pointerId); c.style.cursor = 'grabbing'; }
+  });
+  c.addEventListener('pointermove', ev => {
+    if (!drag) return; const x = toX(ev), gap = rad(m1) + rad(m2) + 10;
+    if (drag === 'A') xA = Math.max(rad(m1) + 10, Math.min(xB - gap, x));
+    else xB = Math.min(W - rad(m2) - 10, Math.max(xA + gap, x));
+    upd();
+  });
+  ['pointerup', 'pointercancel'].forEach(k => c.addEventListener(k, () => { drag = null; c.style.cursor = 'grab'; }));
+  upd();
+  register([c], dt => {
+    ctx.clearRect(0, 0, W, H);
+    line(ctx, xA, Y + 70, xB, Y + 70, '#475569', 1.5);
+    line(ctx, xA, Y + 62, xA, Y + 78, '#475569', 1.5); line(ctx, xB, Y + 62, xB, Y + 78, '#475569', 1.5);
+    txt(ctx, `距離 ${d().toFixed(2)}`, (xA + xB) / 2, Y + 90, { color: COL.dim, size: 14 });
+    const L = Math.min(170, 18 + F() * 60);
+    arrow(ctx, xA + rad(m1), Y, xA + rad(m1) + L, Y, { color: COL.f, w: 4.5, label: 'B 拉 A', lo: 0, loy: -24, lox: -L / 2 });
+    arrow(ctx, xB - rad(m2), Y, xB - rad(m2) - L, Y, { color: COL.f, w: 4.5, label: 'A 拉 B', lo: 0, loy: -24, lox: L / 2 });
+    dot(ctx, xA, Y, rad(m1), '#0369a1', '#7dd3fc'); txt(ctx, 'A', xA, Y, { color: '#fff', size: 18 });
+    dot(ctx, xB, Y, rad(m2), '#be185d', '#f9a8d4'); txt(ctx, 'B', xB, Y, { color: '#fff', size: 18 });
+    txt(ctx, '箭頭長度代表引力大小（為了看得到，有放大）', 20, 24, { align: 'left', color: COL.dim, size: 13 });
+  });
+})();
+
+/* ================= 8 卡文迪許扭秤 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-cav');
+  const O = { x: 450, y: 150 }, ROD = 120, WALL = 360, TARGET = 0.045;
+  let th = 0, om = 0, near = false, trail = [];
+  const cap = $('cav-cap');
+  $('cav-toggle').onclick = () => {
+    near = !near; $('cav-toggle').textContent = near ? '⬆ 把大鉛球移開' : '⬇ 把大鉛球移近';
+    cap.innerHTML = near ? '大鉛球靠近了！小鉛球被吸過去，<strong>細絲被扭轉</strong>，桿子來回擺盪後停在新的角度。看下方牆上的光點移動了多少。' : '大鉛球移開，桿子慢慢擺回原來的位置。';
+  };
+  $('cav-reset').onclick = () => { th = 0; om = 0; near = false; trail = []; $('cav-toggle').textContent = '⬇ 把大鉛球移近'; cap.innerHTML = '俯視圖：一根細絲吊著一根桿子，兩端有小鉛球。按按鈕把兩顆大鉛球移近。'; };
+  register([c], dt => {
+    const tgt = near ? TARGET : 0, k = 6, damp = 0.35;
+    om += (-k * (th - tgt) - damp * om) * dt; th += om * dt;
+    ctx.clearRect(0, 0, W, H);
+    // 大球
+    const bigA = near ? 1 : 0.25;
+    const B1 = { x: O.x + ROD + 6, y: O.y + 48 }, B2 = { x: O.x - ROD - 6, y: O.y - 48 };
+    ctx.globalAlpha = bigA; dot(ctx, B1.x, B1.y, 30, '#475569', '#94a3b8'); dot(ctx, B2.x, B2.y, 30, '#475569', '#94a3b8'); ctx.globalAlpha = 1;
+    txt(ctx, '大鉛球 158 kg', B1.x + 40, B1.y + 26, { align: 'left', color: '#94a3b8', size: 12, alpha: bigA });
+    // 桿
+    const ex = Math.cos(-th) * ROD, ey = Math.sin(-th) * ROD;
+    line(ctx, O.x - ex, O.y + ey, O.x + ex, O.y - ey, '#cbd5e1', 3);
+    dot(ctx, O.x + ex, O.y - ey, 10, '#e2e8f0'); dot(ctx, O.x - ex, O.y + ey, 10, '#e2e8f0');
+    txt(ctx, '小鉛球 0.73 kg', O.x + ex, O.y - ey - 22, { color: '#e2e8f0', size: 12 });
+    if (near) {
+      arrow(ctx, O.x + ex, O.y - ey + 10, O.x + ex + 2, O.y - ey + 34, { color: COL.f, w: 2.5 });
+      arrow(ctx, O.x - ex, O.y + ey - 10, O.x - ex - 2, O.y + ey - 34, { color: COL.f, w: 2.5 });
+    }
+    dot(ctx, O.x, O.y, 5, '#fbbf24'); txt(ctx, '細絲＋小鏡子（現代版）', O.x, O.y - 18, { color: '#fbbf24', size: 12 });
+    // 光
+    const LS = { x: 130, y: WALL };
+    line(ctx, LS.x, LS.y, O.x, O.y, '#ef444488', 2);
+    const inA = Math.atan2(LS.y - O.y, LS.x - O.x), outA = Math.PI - inA + 2 * th * 1.1;
+    const spot = { x: O.x + (WALL - O.y) / Math.sin(outA) * Math.cos(outA), y: WALL };
+    line(ctx, O.x, O.y, spot.x, spot.y, '#ef4444', 2);
+    dot(ctx, LS.x, LS.y, 7, '#ef4444'); txt(ctx, '光源', LS.x, LS.y + 20, { color: '#fca5a5', size: 12 });
+    line(ctx, 520, WALL, 880, WALL, '#94a3b8', 3);
+    for (let x = 520; x <= 880; x += 20) line(ctx, x, WALL, x, WALL + (x % 100 === 0 ? 12 : 6), '#94a3b8', 1);
+    txt(ctx, '遠處的刻度尺', 700, WALL + 28, { color: '#94a3b8', size: 12 });
+    const s0 = O.x + (WALL - O.y) / Math.sin(Math.PI - inA) * Math.cos(Math.PI - inA);
+    line(ctx, s0, WALL - 14, s0, WALL, '#64748b', 1.5);
+    ctx.save(); ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 16; dot(ctx, spot.x, spot.y, 6, '#fca5a5'); ctx.restore();
+    txt(ctx, `光點移動 ${Math.abs((spot.x - s0) / 20).toFixed(1)} 格`, spot.x, WALL - 22, { color: '#fca5a5', size: 13 });
+    txt(ctx, `現代教室版扭秤（鏡子＋光）｜桿子實際轉動角度不到 0.1°，畫面已放大`, 20, 24, { align: 'left', color: COL.dim, size: 13 });
+  });
+})();
+
+/* ================= 9 太空中的重力 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-space');
+  const RE = 6371;
+  const PLACES = [['🏠 地面', 0], ['✈️ 飛機 10 km', 10], ['🛰 太空站 400 km', 400], ['📡 GPS 衛星 20200 km', 20200], ['📺 同步衛星 35786 km', 35786], ['🌕 月球 384400 km', 378029]];
+  let h = 400, t = 0;
+  const stars = makeStars(80, W, H, 9);
+  const box = $('space-btns');
+  PLACES.forEach(([n, v]) => { const b = document.createElement('button'); b.className = 'btn' + (v === 400 ? ' sel' : ''); b.textContent = n; b.onclick = () => { h = v; selectIn('#space-btns .btn', b); upd(); }; box.appendChild(b); });
+  const g = hh => 9.8 * Math.pow(RE / (RE + hh), 2);
+  function upd() {
+    const gv = g(h), pct = gv / 9.8 * 100;
+    $('space-cap').innerHTML = `高度 ${h.toLocaleString()} km：重力是地面的 <strong class="text-orange-300">${pct >= 10 ? pct.toFixed(1) : pct.toFixed(2)}%</strong>（每公斤受力 ${gv >= 1 ? gv.toFixed(2) : gv.toFixed(3)} 牛頓）。` +
+      (h === 400 ? '　<strong>接近九成！</strong>太空站裡的重力幾乎跟地面一樣，太空人飄浮是因為「一起在掉」。' : h >= 378000 ? '　月球那麼遠，重力只剩不到 0.03%，但這點引力就足以讓月球一直繞著地球。' : '');
+  }
+  upd();
+  register([c], dt => {
+    t += dt;
+    ctx.clearRect(0, 0, W, H);
+    drawStars(ctx, stars);
+    // 左：高度（對數刻度）
+    const yOf = hh => 330 - Math.log10(1 + hh) / Math.log10(1 + 400000) * 290;
+    ctx.save(); ctx.beginPath(); ctx.ellipse(250, 330 + 900, 1100, 900, 0, 0, Math.PI * 2); ctx.fillStyle = '#1e40af'; ctx.fill(); ctx.restore();
+    txt(ctx, '地球表面', 250, 352, { color: '#bfdbfe', size: 13 });
+    PLACES.forEach(([n, v]) => { const y = yOf(v); line(ctx, 60, y, 440, y, '#ffffff14', 1); txt(ctx, n, 444, y + (v === 35786 ? -7 : v === 20200 ? 7 : 0), { align: 'left', color: v === h ? '#fde68a' : COL.dim, size: 12, bold: v === h }); });
+    const y = yOf(h);
+    if (h === 400) {
+      ctx.fillStyle = '#cbd5e1'; ctx.fillRect(210, y - 6, 80, 12); ctx.fillStyle = '#1d4ed8'; ctx.fillRect(180, y - 14, 26, 28); ctx.fillRect(294, y - 14, 26, 28);
+      const bob = Math.sin(t * 1.5) * 3;
+      dot(ctx, 250, y - 1 + bob, 3, '#fde68a');
+      arrow(ctx, 250, y + 16, 250, y + 46, { color: COL.f, w: 3, label: '重力（太空站）', lo: 14, size: 12 });
+      arrow(ctx, 330, y, 375, y, { color: COL.v, w: 3, label: '7.7 km/s', lo: 0, lox: -22, loy: -16, size: 12 });
+    } else if (h >= 378000) moonDot(ctx, 250, y, 14);
+    else dot(ctx, 250, y, 8, '#fde68a', '#fff');
+    txt(ctx, '高度（對數刻度）', 20, 24, { align: 'left', color: COL.dim, size: 13 });
+    // 右：長條
+    const BX = 640, BW = 60, top = 60, bot = 330;
+    txt(ctx, '重力大小（地面＝100%）', BX + BW / 2, 36, { color: '#e2e8f0', size: 14 });
+    ctx.fillStyle = '#1e293b'; ctx.fillRect(BX, top, BW, bot - top);
+    const f = g(h) / 9.8;
+    ctx.fillStyle = '#fb923c'; ctx.fillRect(BX, bot - (bot - top) * f, BW, (bot - top) * f);
+    txt(ctx, (f * 100 >= 10 ? (f * 100).toFixed(1) : (f * 100).toFixed(2)) + '%', BX + BW + 14, bot - (bot - top) * f, { align: 'left', color: '#fdba74', size: 18 });
+    [0, 50, 100].forEach(p => txt(ctx, p + '%', BX - 8, bot - (bot - top) * p / 100, { align: 'right', color: COL.dim, size: 11, bold: false }));
+  });
+})();
+
+/* ================= 小測驗 ================= */
+(function () {
+  const Q = [
+    { q: '亞里斯多德認為天上和地上的運動有什麼不同？', o: ['天上和地上都做直線運動', '天上做完美的圓周運動，地上的東西回到自然位置後停下', '天上的東西比較重', '沒有不同'], a: 1, e: '他把世界分成「月上界」和「月下界」，兩邊規則不同。' },
+    { q: '哥白尼如何解釋火星的「逆行」？', o: ['火星真的會往回走', '地球跑內圈比較快，追過火星時，火星看起來像在倒退', '火星在本輪上轉', '因為月亮擋住了'], a: 1, e: '逆行是「我們自己在動」造成的錯覺，就像超車時旁邊的車看起來往後退。' },
+    { q: '根據克卜勒第二定律，行星什麼時候跑得最快？', o: ['離太陽最遠時', '離太陽最近時', '一直都一樣快', '在橢圓的正中央時'], a: 1, e: '相同時間掃過相同面積：靠近太陽時半徑短，必須跑得快，面積才夠。' },
+    { q: '牛頓的砲彈思想實驗告訴我們什麼？', o: ['砲彈越重飛越遠', '月亮不受地球引力', '月亮其實一直在往地球掉，只是跑得夠快所以掉不到地面', '太空中沒有重力'], a: 2, e: '丟石頭和月亮繞地球是同一件事，差別只在速度。' },
+    { q: '地球拉蘋果的力是 1 牛頓，那麼蘋果拉地球的力是多少？', o: ['0 牛頓', '比 1 牛頓小很多', '1 牛頓', '比 1 牛頓大很多'], a: 2, e: '牛頓第三定律：兩邊的力一樣大、方向相反。地球幾乎不動，是因為它質量太大，加速度極小。' },
+    { q: '太空人在國際太空站（高度約 400 km）裡飄浮，原因是？', o: ['那裡沒有重力', '重力只剩 1%', '重力還有約 89%，但太空人和太空站一起在自由落下', '太空站有反重力裝置'], a: 2, e: '重力還在，只是大家「一起掉」，彼此沒有推擠，所以感覺不到重量。' },
+    { q: '⭐ 挑戰：一顆衛星離地心的距離變成原來的 3 倍，它受到的地球引力變成原來的幾倍？', o: ['1/3', '1/6', '1/9', '3'], a: 2, e: '平方反比：距離 3 倍 → 引力 1/3² ＝ 1/9。' },
+    { q: '⭐ 挑戰：兩顆星球質量都變 2 倍、距離也變 2 倍，引力變幾倍？', o: ['1 倍（不變）', '2 倍', '4 倍', '1/2'], a: 0, e: 'F ∝ m₁m₂/r²：質量相乘 ×4，距離平方 ×4，4÷4＝1，不變。' }
+  ];
+  const box = $('quiz'); let done = 0, right = 0;
+  Q.forEach((it, i) => {
+    const d = document.createElement('div');
+    d.className = 'p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3';
+    d.innerHTML = `<div class="font-bold">${i + 1}. ${it.q}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${it.o.map((o, j) => `<button class="btn !justify-start text-left" data-j="${j}">(${'ABCD'[j]}) ${o}</button>`).join('')}</div><div class="fb text-sm text-slate-300"></div>`;
+    let answered = false;
+    d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+      if (answered) return; answered = true; done++;
+      const j = +b.dataset.j, ok = j === it.a; if (ok) right++;
+      d.querySelectorAll('[data-j]').forEach(x => { if (+x.dataset.j === it.a) x.classList.add('right'); });
+      if (!ok) b.classList.add('wrong');
+      d.querySelector('.fb').innerHTML = (ok ? '✅ 正確！' : `❌ 正確答案是 (${'ABCD'[it.a]})。`) + it.e;
+      $('quiz-score').textContent = done === Q.length ? `全部完成：答對 ${right} / ${Q.length} 題 ${right === Q.length ? '🎉 全對！' : '，錯的題目回到對應的節再看一次動畫。'}` : `已作答 ${done} / ${Q.length}`;
+    });
+    box.appendChild(d);
+  });
+  $('quiz-score').textContent = `已作答 0 / ${Q.length}`;
+})();
+
+if (window.lucide) lucide.createIcons();
+</script>
+</body>
+</html>
