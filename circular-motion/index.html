@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>圓周運動・向心力・離心力（逐步互動版）</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    html { scroll-behavior: smooth; }
+    .sim-canvas {
+      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #020617 100%);
+      border: 1px solid #1e293b;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+      border-radius: 0.875rem;
+      width: 100%; height: auto; display: block;
+      touch-action: manipulation;
+    }
+    .mjx-chtml { font-size: 108% !important; }
+
+    /* 統一按鈕 */
+    .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.55rem 1rem; border-radius:.75rem;
+           font-size:.875rem; font-weight:700; border:1px solid #334155; background:#1e293b; color:#e2e8f0;
+           transition: all .15s; cursor:pointer; user-select:none; }
+    .btn:hover:not(:disabled) { background:#334155; }
+    .btn:active:not(:disabled) { transform: scale(.96); }
+    .btn:disabled { opacity:.35; cursor:not-allowed; }
+    .btn-go { background:#4f46e5; border-color:#6366f1; color:#fff; }
+    .btn-go:hover:not(:disabled) { background:#6366f1; }
+    .btn-red { background:#b91c1c; border-color:#ef4444; color:#fff; }
+    .btn-red:hover:not(:disabled) { background:#dc2626; }
+    .btn.sel { background:#4338ca; border-color:#a5b4fc; color:#fff; box-shadow:0 0 0 2px #a5b4fc55; }
+    .btn.right { background:#065f46; border-color:#34d399; color:#fff; }
+    .btn.wrong { background:#7f1d1d; border-color:#f87171; color:#fff; }
+
+    /* 三層深度 */
+    .layer { border-radius: 1rem; padding: 1rem 1.25rem; border: 1px solid; font-size: .95rem; line-height: 1.8; }
+    .layer-tag { display:inline-block; font-size:.75rem; font-weight:800; padding:.15rem .6rem; border-radius:999px; margin-bottom:.4rem; }
+    .l1 { background: #0c1a2e; border-color:#1e3a5f; }
+    .l1 .layer-tag { background:#0ea5e933; color:#7dd3fc; }
+    .l2 { background: #1a1530; border-color:#3b2f63; }
+    .l2 .layer-tag { background:#a855f733; color:#d8b4fe; }
+    details.l3 { background: #1c1408; border-color:#5c4210; }
+    details.l3 > summary { cursor:pointer; font-weight:800; color:#fbbf24; list-style:none; }
+    details.l3 > summary::-webkit-details-marker { display:none; }
+    details.l3 > summary::before { content:'▸ '; }
+    details.l3[open] > summary::before { content:'▾ '; }
+    details.l3 .inner { margin-top:.75rem; }
+    .takeaway { border-radius: 1rem; padding: .9rem 1.25rem; background: linear-gradient(90deg,#064e3b55,#0f172a);
+                border:1px solid #065f46; color:#a7f3d0; font-weight:700; }
+
+    .caption { min-height: 3.2rem; padding:.7rem 1rem; border-radius:.75rem; background:#0f172a; border:1px solid #1e293b;
+               color:#e2e8f0; font-size:.95rem; line-height:1.6; }
+    .chip { display:inline-block; padding:0 .45rem; border-radius:.4rem; cursor:pointer; border:1px dashed #fbbf24; color:#fde68a; }
+    .chip:hover { background:#fbbf2422; }
+    .glow { box-shadow: 0 0 0 3px #fbbf24, 0 0 18px #fbbf24aa !important; border-radius:.75rem; }
+    input[type=range] { accent-color:#818cf8; width:100%; }
+    .qa summary { cursor:pointer; font-weight:700; color:#e2e8f0; }
+    .station-num { width:2.75rem; height:2.75rem; border-radius:.9rem; display:flex; align-items:center; justify-content:center;
+                   font-weight:900; font-size:1.15rem; border:1px solid; flex-shrink:0; }
+    .legend-dot { display:inline-block; width:.8rem; height:.8rem; border-radius:3px; vertical-align:middle; margin-right:.25rem; }
+    table.rec td, table.rec th { padding:.3rem .6rem; border-bottom:1px solid #1e293b; text-align:center; }
+    @media print { header, .btn, input[type=range] { display:none !important; } details.l3 { display:block; } }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white pb-24">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/85 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 min-w-0">
+        <i data-lucide="rotate-ccw" class="w-6 h-6 text-indigo-400 shrink-0"></i>
+        <span class="font-bold tracking-wider truncate bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">圓周運動實驗室</span>
+      </div>
+      <nav class="hidden lg:flex items-center gap-4 text-sm font-medium text-slate-300">
+        <a href="#s0" class="hover:text-indigo-400">0 預測</a>
+        <a href="#s1" class="hover:text-indigo-400">1 速度</a>
+        <a href="#s2" class="hover:text-indigo-400">2 加速度</a>
+        <a href="#s3" class="hover:text-indigo-400">3 向心力</a>
+        <a href="#s4" class="hover:text-indigo-400">4 力的大小</a>
+        <a href="#s5" class="hover:text-indigo-400">5 離心力</a>
+        <a href="#s6" class="hover:text-indigo-400">6 小測</a>
+      </nav>
+      <a href="#downloads" class="btn !py-1.5 !px-3 !text-xs shrink-0"><i data-lucide="download" class="w-4 h-4"></i> 學習單</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative pt-14 pb-10 text-center border-b border-slate-800 bg-gradient-to-b from-indigo-950/40 to-slate-950 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-flex flex-wrap justify-center items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 mb-4">
+        力學三部曲 ｜
+        <a class="underline hover:text-white" href="https://sunny30119.github.io/newton-laws-history/">① 牛頓三大運動定律</a> →
+        <span class="text-slate-500">② 萬有引力（製作中）</span> →
+        <span class="text-white">③ 圓周運動</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-4 leading-tight">
+        圓周運動：<br>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-pink-400">一步一步看懂向心力與離心力</span>
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-6">主軸問題：<strong class="text-white">「繩子斷掉的瞬間，球會往哪裡飛？」</strong></p>
+
+      <div class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 text-left text-sm">
+        <div class="layer l1 !py-3"><div class="layer-tag">👀 看懂</div><div class="text-slate-300">每個人都看得懂：動畫＋一句話結論，不用公式。</div></div>
+        <div class="layer l2 !py-3"><div class="layer-tag">🤔 想深一點</div><div class="text-slate-300">想知道「為什麼」：用圖形和比例推理。</div></div>
+        <div class="layer !py-3 bg-[#1c1408] border-[#5c4210]"><div class="layer-tag bg-amber-500/20 text-amber-300">🔬 資優延伸</div><div class="text-slate-300">點開才出現：公式推導與定量計算。</div></div>
+      </div>
+      <div class="mt-5 flex flex-wrap justify-center gap-4 text-sm text-slate-300">
+        <span><span class="legend-dot" style="background:#38bdf8"></span>速度（藍）</span>
+        <span><span class="legend-dot" style="background:#fb923c"></span>加速度／速度變化（橘）</span>
+        <span><span class="legend-dot" style="background:#f87171"></span>真的力（紅實線）</span>
+        <span><span class="legend-dot" style="background:transparent;border:2px dashed #f87171"></span>假想力（紅虛線）</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-12 space-y-24">
+
+    <!-- ===================== 第 0 站 ===================== -->
+    <section id="s0" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-pink-500/15 text-pink-300 border-pink-500/30">0</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">先預測：繩子斷了，球往哪飛？</h2>
+        <p class="text-sm text-slate-400">先選答案，再剪斷繩子。猜錯沒關係，猜錯才學得最多。</p></div>
+      </div>
+
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <canvas id="cv-predict" width="900" height="400" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2">
+          <button class="btn" data-predict="A">A．沿半徑往外飛</button>
+          <button class="btn" data-predict="B">B．沿切線直直飛</button>
+          <button class="btn" data-predict="C">C．繼續彎彎地飛</button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="btn-cut" class="btn btn-red" disabled>✂ 剪斷繩子</button>
+          <button id="btn-predict-reset" class="btn">↺ 重來</button>
+        </div>
+        <div id="predict-fb" class="caption">先在上面選一個答案（A、B、C），「剪斷繩子」按鈕才會亮起來。</div>
+      </div>
+    </section>
+
+    <!-- ===================== 第 1 站 ===================== -->
+    <section id="s1" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-sky-500/15 text-sky-300 border-sky-500/30">1</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">速度：快慢沒變，方向一直在變</h2>
+        <p class="text-sm text-slate-400">按「下一步」，球每次走 30°，並留下當時的速度箭頭。</p></div>
+      </div>
+
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <canvas id="cv-vel" width="900" height="420" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2">
+          <button id="vel-play" class="btn btn-go">▶ 播放</button>
+          <button id="vel-next" class="btn">⏭ 下一步</button>
+          <button id="vel-reset" class="btn">↺ 重來</button>
+        </div>
+        <div id="vel-cap" class="caption">第 0 格：速率 4.0 m/s，方向朝上（垂直半徑，貼著圓）。</div>
+      </div>
+
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        右邊的「速度收藏盒」把每一支箭頭的尾巴對齊排在一起。<strong>每支箭頭一樣長</strong>，表示快慢沒變。<strong>箭頭的方向一直在轉</strong>，表示速度在變。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        物理學的「速度」包含兩件事：<strong>多快（速率）</strong>和<strong>往哪裡（方向）</strong>。兩件事只要有一件改變，速度就算改變了。<br>
+        牛頓第二定律說：速度改變，就一定有加速度；有加速度，就一定有合力。所以「等速率」的圓周運動，其實<strong>一直在加速</strong>。只是它加速的方式不是變快，而是轉彎。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：週期、轉速與角速度</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>繞一圈的時間叫<strong>週期</strong> $T$。一圈的路徑長是 $2\pi r$，所以速率是 $$v = \frac{2\pi r}{T}$$</p>
+          <p>每秒轉過多少角度叫<strong>角速度</strong> $\omega$（單位 rad/s）：$\omega = \dfrac{2\pi}{T}$，因此 $v = r\omega$。同一個轉盤上，離中心越遠的點，$r$ 越大，速率越快，但角速度都一樣。</p>
+          <p class="text-slate-400 text-sm">想想看：旋轉木馬外圈和內圈的馬，誰跑得快？誰轉得快？</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：圓周運動就算快慢不變，<u>方向一直變</u>，所以速度一直在變，一直有加速度。</div>
+    </section>
+
+    <!-- ===================== 第 2 站 ===================== -->
+    <section id="s2" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-orange-500/15 text-orange-300 border-orange-500/30">2</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">加速度：為什麼指向圓心？</h2>
+        <p class="text-sm text-slate-400">全頁最重要的動畫。分五個動作，按一下做一個。</p></div>
+      </div>
+
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <canvas id="cv-dv" width="900" height="470" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="dv-prev" class="btn">⏮ 上一步</button>
+          <button id="dv-next" class="btn btn-go">⏭ 下一步</button>
+          <button id="dv-auto" class="btn">▶ 自動播放</button>
+          <button id="dv-reset" class="btn">↺ 重來</button>
+          <span id="dv-stepnum" class="text-sm text-slate-400 ml-1 mono">動作 0 / 5</span>
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="shrink-0 text-slate-300">A、B 兩點相隔</span>
+          <input id="dv-angle" type="range" min="10" max="90" step="5" value="50">
+          <span id="dv-angle-val" class="mono shrink-0 w-12 text-right text-indigo-300">50°</span>
+        </div>
+        <div id="dv-cap" class="caption"></div>
+        <div id="dv-num" class="text-xs sm:text-sm mono text-amber-200/80 px-1"></div>
+      </div>
+
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        把 B 點的速度搬到 A 點，和 A 點的速度比一比，就能看出速度「改變了多少」，也就是橘色的 $\Delta v$。把它放回圓上，<strong>它指向圓心</strong>。加速度就是「速度的改變」，所以<strong>加速度指向圓心</strong>。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        <p>為什麼可以把箭頭「搬來搬去」？因為速度箭頭只代表「多快、往哪」，跟畫在哪裡無關。平移它，不會改變它。</p>
+        <p class="mt-2">拉動滑桿試試：不管 A、B 隔多遠，$\Delta v$ 放到中點時<strong>都指向圓心</strong>（左右對稱的關係）。A、B 越靠近，這支 $\Delta v$ 就越能代表「某一個瞬間」的加速度。靠到幾乎重疊時，它就是那一點的加速度，而且還是指向圓心。</p>
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：用相似三角形推出 $a = v^2/r$</summary>
+        <div class="inner text-slate-300 space-y-3">
+          <p>圖上有兩個三角形：</p>
+          <ul class="list-disc pl-6 space-y-1">
+            <li>位置三角形：圓心 O、A、B。兩邊都是半徑 $r$，夾角 $\Delta\theta$，底邊是弦長 $\overline{AB}$。</li>
+            <li>速度三角形：$v_1$、$v_2$ 尾巴對齊，兩邊都是 $v$，夾角也是 $\Delta\theta$（速度永遠垂直半徑，半徑轉幾度，速度就轉幾度），底邊是 $\Delta v$。</li>
+          </ul>
+          <p>兩個都是頂角 $\Delta\theta$ 的等腰三角形 → <strong>相似</strong>。所以 $$\frac{\Delta v}{v} = \frac{\overline{AB}}{r}$$</p>
+          <p>A、B 很靠近時，弦長 ≈ 弧長 ≈ $v\,\Delta t$。代入： $$\Delta v = \frac{v \cdot v\,\Delta t}{r} \;\Rightarrow\; a = \frac{\Delta v}{\Delta t} = \frac{v^2}{r}$$</p>
+          <p class="text-sm text-slate-400">驗證：上方橘色數字列假設 $v = 4$ m/s、$r = 2$ m（所以 $v^2/r = 8$ m/s²）。把滑桿往左拉，看 $\Delta v / \Delta t$ 是不是越來越接近 8。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：速度的改變（$\Delta v$）指向圓心，所以<u>圓周運動的加速度指向圓心</u>，叫做「向心加速度」。</div>
+    </section>
+
+    <!-- ===================== 第 3 站 ===================== -->
+    <section id="s3" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-red-500/15 text-red-300 border-red-500/30">3</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">向心力不是新的力，是一個「角色」</h2>
+        <p class="text-sm text-slate-400">加速度指向圓心 → 依照牛頓第二定律，合力也必須指向圓心。這個指向圓心的合力，由誰來提供？</p></div>
+      </div>
+
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <div class="flex flex-wrap gap-2">
+          <button class="btn sel" data-scene="rope">🪢 甩繩子的球</button>
+          <button class="btn" data-scene="moon">🌕 月球繞地球</button>
+          <button class="btn" data-scene="car">🚗 汽車轉彎</button>
+          <button class="btn" data-scene="rotor">🎡 旋轉咖啡杯（貼牆）</button>
+        </div>
+        <canvas id="cv-roles" width="900" height="420" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap gap-2">
+          <button id="roles-release" class="btn btn-red">💨 讓這個力消失</button>
+          <button id="roles-reset" class="btn">↺ 重來</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800"><div class="text-slate-400 text-xs">誰在演「向心力」</div><div id="role-actor" class="text-red-300 font-bold text-lg"></div></div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800"><div class="text-slate-400 text-xs">施力者 → 受力者</div><div id="role-who" class="font-bold text-lg"></div></div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800"><div class="text-slate-400 text-xs">如果這個力消失</div><div id="role-gone" class="font-bold"></div></div>
+        </div>
+      </div>
+
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        「向心力」像戲裡「主角」這個位置，每一齣戲由不同的演員來演。繩子的拉力、地球的引力、輪胎的摩擦力、牆壁的推力，都可以來演。<strong>只要這個力指向圓心，它就在擔任向心力。</strong>
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        畫受力圖時，<strong>不要另外多畫一支「向心力」</strong>。你只要畫真的力（拉力、重力、摩擦力、正向力…），它們的合力指向圓心，那個合力就是向心力。<br>
+        每一個場景都按按看「讓這個力消失」：演員一下台，物體就沿著<strong>切線</strong>直直走。這就是第 0 站的答案。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：兩個演員合演——雲霄飛車迴圈頂端</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>有時候向心力由好幾個力「合演」。雲霄飛車在迴圈<strong>最高點</strong>時，重力 $mg$ 向下，軌道推力 $N$ 也向下（軌道在頭頂上方），兩個都指向圓心：</p>
+          $$N + mg = \frac{mv^2}{r}$$
+          <p>速度越慢，需要的向心力越小。慢到 $N = 0$ 時，<strong>光靠重力就夠了</strong>，這就是不會掉下來的最低速率：</p>
+          $$mg = \frac{mv_{\min}^2}{r} \;\Rightarrow\; v_{\min} = \sqrt{gr}$$
+          <p>迴圈半徑 10 m 時，$v_{\min} = \sqrt{9.8 \times 10} \approx 9.9$ m/s（約時速 36 公里）。比這還慢，重力就「太多了」，車會脫離軌道往下掉。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：向心力是<u>「角色名稱」</u>，由真的力來演。受力圖只畫真的力。</div>
+    </section>
+
+    <!-- ===================== 第 4 站 ===================== -->
+    <section id="s4" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-emerald-500/15 text-emerald-300 border-emerald-500/30">4</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">力的大小：需要多大的向心力？</h2>
+        <p class="text-sm text-slate-400">拉三支滑桿，看「轉這個圈<strong>需要</strong>的力」。超過繩子的上限，繩子就會斷。</p></div>
+      </div>
+
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <canvas id="cv-mag" width="900" height="400" class="sim-canvas"></canvas>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+          <div id="wrap-m" class="p-2"><div class="flex justify-between"><span>質量 m</span><span class="mono text-indigo-300"><span id="val-m">1.0</span> kg</span></div><input id="sl-m" type="range" min="0.5" max="3" step="0.5" value="1"></div>
+          <div id="wrap-v" class="p-2"><div class="flex justify-between"><span>速率 v</span><span class="mono text-sky-300"><span id="val-v">3.0</span> m/s</span></div><input id="sl-v" type="range" min="1" max="8" step="0.5" value="3"></div>
+          <div id="wrap-r" class="p-2"><div class="flex justify-between"><span>半徑 r</span><span class="mono text-emerald-300"><span id="val-r">1.00</span> m</span></div><input id="sl-r" type="range" min="0.5" max="2" step="0.25" value="1"></div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="mag-record" class="btn btn-go">📋 記錄這一筆</button>
+          <button id="mag-newrope" class="btn">↺ 換一條新繩子</button>
+          <button id="mag-clear" class="btn">🗑 清空紀錄</button>
+        </div>
+        <div id="mag-cap" class="caption"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-sm space-y-1.5">
+            <div class="font-bold text-emerald-300 mb-1">🔎 實驗任務（記錄後看表格找規律）</div>
+            <div>任務 1：m＝1、r＝1，分別記錄 v＝2 和 v＝4。速率變 2 倍，力變幾倍？</div>
+            <div>任務 2：m＝1、v＝4，分別記錄 r＝1 和 r＝2。半徑變 2 倍，力變幾倍？</div>
+            <div>任務 3：v＝4、r＝1，分別記錄 m＝1 和 m＝2。質量變 2 倍，力變幾倍？</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-sm overflow-x-auto">
+            <table class="rec w-full mono text-xs sm:text-sm"><thead class="text-slate-400"><tr><th>#</th><th>m (kg)</th><th>v (m/s)</th><th>r (m)</th><th>需要的力 (N)</th></tr></thead><tbody id="rec-body"><tr><td colspan="5" class="text-slate-500">還沒有紀錄</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer l1"><div class="layer-tag">👀 看懂</div>
+        <strong>越重、越快、彎越急（半徑越小）</strong>，需要的向心力就越大。需要的力超過繩子能給的力，繩子就斷。斷了之後沒有力拉它，球就沿<strong>切線</strong>飛出去。
+      </div>
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點</div>
+        為什麼速率變 2 倍，力會變 <strong>4 倍</strong>，不是 2 倍？因為快了 2 倍，有兩件事同時加倍：
+        <ol class="list-decimal pl-6 mt-1">
+          <li>速度箭頭變 2 倍長，同樣轉 30°，要改變的量（$\Delta v$）也變 2 倍；</li>
+          <li>跑得快，轉 30° 只要一半的時間，等於轉向的頻率變 2 倍。</li>
+        </ol>
+        改變量 2 倍 × 頻率 2 倍 ＝ <strong>4 倍</strong>。這也是為什麼高速過彎特別危險。
+      </div>
+      <details class="layer l3"><summary>🔬 資優延伸：$F = mv^2/r$ 與彎道限速</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>結合第 2 站的 $a = v^2/r$ 和牛頓第二定律 $F = ma$：
+            $$F_{\text{向心}} = <span class="chip" data-hl="m">m</span>\,\frac{<span class="chip" data-hl="v">v</span>^2}{<span class="chip" data-hl="r">r</span>}$$
+            <span class="text-sm text-slate-400">（點公式旁邊的 m、v、r，對應的滑桿和動畫會發亮）</span></p>
+          <p class="flex flex-wrap gap-2"><span class="chip" data-hl="m">m：質量</span><span class="chip" data-hl="v">v：速率</span><span class="chip" data-hl="r">r：半徑</span></p>
+          <p><strong>彎道限速：</strong>汽車轉彎的向心力由摩擦力提供，最大摩擦力約 $\mu mg$（$\mu$ 是摩擦係數）。令 $\mu mg = mv^2/r$，得 $v_{\max} = \sqrt{\mu g r}$。<strong>質量消掉了</strong>，所以大車小車的極限速率一樣。</p>
+          <p>半徑 50 m 的彎道，乾燥路面 $\mu \approx 0.8$：$v_{\max} = \sqrt{0.8 \times 9.8 \times 50} \approx 19.8$ m/s ≈ <strong>71 km/h</strong>。<br>下雨天 $\mu \approx 0.4$：$v_{\max} \approx 14$ m/s ≈ <strong>50 km/h</strong>。摩擦力少一半，速限要打七折。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：需要的向心力跟<u>質量成正比、跟速率平方成正比、跟半徑成反比</u>。</div>
+    </section>
+
+    <!-- ===================== 第 5 站 ===================== -->
+    <section id="s5" class="scroll-mt-20 space-y-6">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-purple-500/15 text-purple-300 border-purple-500/30">5</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">離心力：換一台攝影機看看</h2>
+        <p class="text-sm text-slate-400">公車轉彎時，你覺得被往外「甩」。真的有一股力在甩你嗎？</p></div>
+      </div>
+
+      <div class="layer l1"><div class="layer-tag">👀 先想一想</div>
+        國一學過：判斷「有沒有在動」要先選<strong>參考點</strong>。今天我們把參考點換成一台<strong>攝影機</strong>：
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+          <div class="p-3 rounded-xl bg-slate-950 border border-sky-900"><strong class="text-sky-300">🎥 地面攝影機</strong><br>架在地上，自己不動、不轉。</div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-purple-900"><strong class="text-purple-300">🚌 車上攝影機</strong><br>黏在車上，跟著車子一起煞車、一起轉彎。</div>
+        </div>
+        <p class="mt-2">同一件事情，兩台攝影機會拍到<strong>不同的故事</strong>。我們先從簡單的直線版開始。</p>
+      </div>
+
+      <!-- 5-1 急煞 -->
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <div class="font-bold text-lg text-purple-300">台階 1｜直線版：公車急煞（車廂地板很滑，上面放一顆球）</div>
+        <canvas id="cv-brake-g" width="900" height="210" class="sim-canvas"></canvas>
+        <canvas id="cv-brake-b" width="900" height="210" class="sim-canvas"></canvas>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="brake-go" class="btn btn-go">▶ 兩台攝影機同步播放</button>
+          <label class="text-sm text-slate-300 flex items-center gap-1.5 ml-2"><input id="brake-slow" type="checkbox" class="accent-indigo-400"> 慢動作</label>
+        </div>
+        <div id="brake-cap" class="caption">按播放。仔細比較上下兩個畫面裡「球」的動作。</div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+          <div class="font-bold">🔍 真力檢查：下面畫面（車上攝影機）裡，把球「往前推」的那股力，<span class="text-red-300">施力者是誰？</span></div>
+          <div class="flex flex-wrap gap-2" id="who-brake">
+            <button class="btn" data-who="driver">司機</button>
+            <button class="btn" data-who="floor">車廂地板</button>
+            <button class="btn" data-who="air">車裡的空氣</button>
+            <button class="btn" data-who="none">找不到施力者</button>
+          </div>
+          <div id="who-brake-fb" class="caption">提示：國中學過「真的力一定有施力者，而且有反作用力」（牛頓第三定律）。</div>
+        </div>
+      </div>
+
+      <!-- 5-2 旋轉圓盤 -->
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <div class="font-bold text-lg text-purple-300">台階 2｜轉彎版：旋轉圓盤上的冰球（核心實驗）</div>
+        <p class="text-sm text-slate-300">很滑的旋轉圓盤，中心柱子用繩子綁著一顆冰球。圓盤上有一台「🎠 圓盤攝影機」跟著一起轉。</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div><div class="text-sm font-bold text-sky-300 mb-1">🎥 地面攝影機（不轉）</div><canvas id="cv-disk-g" width="440" height="440" class="sim-canvas"></canvas></div>
+          <div><div class="text-sm font-bold text-purple-300 mb-1">🎠 圓盤攝影機（跟著轉）</div><canvas id="cv-disk-r" width="440" height="440" class="sim-canvas"></canvas></div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="disk-cut" class="btn btn-red">✂ 剪斷繩子</button>
+          <button id="disk-reset" class="btn">↺ 重來</button>
+          <div class="flex items-center gap-2 text-sm ml-2 grow min-w-[220px]"><span class="shrink-0">圓盤轉速</span><input id="disk-w" type="range" min="0.4" max="1.4" step="0.1" value="0.8"><span id="disk-w-val" class="mono shrink-0 text-indigo-300">0.8</span></div>
+        </div>
+        <div id="disk-cap" class="caption"></div>
+      </div>
+
+      <div class="layer l2"><div class="layer-tag">🤔 想深一點：為什麼叫「假想力」？</div>
+        <p><strong>剪斷之前：</strong>在圓盤攝影機裡，冰球「靜止不動」，但繩子明明一直往內拉它。只有一個力，東西卻不動，帳算不平。為了讓帳平衡，只好在帳本上<strong>「補」一個往外的力</strong>，這就是離心力。</p>
+        <p class="mt-2"><strong>剪斷之後：</strong>地面攝影機看到冰球走<strong>直線</strong>，根本沒有力在推它，是圓盤在它底下轉走了。圓盤攝影機卻看到冰球「被甩出去」。</p>
+        <p class="mt-2"><strong>真力檢查：</strong>離心力的施力者是誰？找不到。它<strong>只會出現在會轉的攝影機裡</strong>，換成地面攝影機它就消失了。真的力不會因為換一台攝影機就消失，所以離心力是<strong>假想力</strong>。</p>
+        <p class="mt-2"><strong>回到公車轉彎：</strong>站在地上看，你的身體想照慣性直走，是車門（或椅子）把你往內推，讓你跟著車轉彎。你感覺「被往外甩」，其實是「被往內推」。</p>
+      </div>
+
+      <!-- 5-3 洗衣機 -->
+      <div class="p-4 sm:p-5 bg-slate-900 rounded-2xl border border-slate-800 space-y-4">
+        <div class="font-bold text-lg text-purple-300">台階 3｜生活應用：洗衣機脫水</div>
+        <div class="flex flex-wrap gap-2">
+          <button class="btn sel" data-wview="ground">🎥 地面攝影機</button>
+          <button class="btn" data-wview="drum">🌀 洗衣槽攝影機</button>
+        </div>
+        <canvas id="cv-washer" width="900" height="380" class="sim-canvas"></canvas>
+        <div id="washer-cap" class="caption"></div>
+      </div>
+
+      <!-- 5-4 一句話規則與常見反問 -->
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-purple-950/60 to-slate-900 border border-purple-800/60 space-y-2">
+        <div class="font-black text-purple-200 text-lg">📏 一句話規則</div>
+        <p class="text-slate-200 leading-relaxed">站在<strong>沒有加速的地方</strong>（地面攝影機）看，只需要真的力就能解釋一切。<br>
+        站在<strong>正在加速或轉彎的地方</strong>（車上攝影機）看，就得多補一個假想力，帳才算得平。<br>
+        <span class="text-amber-200">考試畫受力圖，一律用地面攝影機，所以<strong>圓周運動只畫真的力，不畫離心力</strong>。</span></p>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-bold text-slate-300">🙋 同學常問</div>
+        <details class="qa p-4 rounded-xl bg-slate-900 border border-slate-800"><summary>「可是我真的感覺到被推啊！」</summary>
+          <p class="mt-2 text-slate-300">感覺是真的，但原因不是「有東西往外推你」。你的身體想照慣性直直走，車子卻轉彎了，於是車門或椅子從外側把你往內推。你感覺到的其實是<strong>這個往內的推力</strong>，大腦卻把它解讀成「我被往外甩」。</p></details>
+        <details class="qa p-4 rounded-xl bg-slate-900 border border-slate-800"><summary>「那離心力到底存不存在？」</summary>
+          <p class="mt-2 text-slate-300">它是「車上攝影機」帳本上的力。用轉動中的角度計算時，工程師真的會用它，算起來很方便。但它找不到施力者，換成地面攝影機它就消失了，所以它不是「真的力」。</p></details>
+        <details class="qa p-4 rounded-xl bg-slate-900 border border-slate-800"><summary>「向心力和離心力是一對作用力與反作用力嗎？」</summary>
+          <p class="mt-2 text-slate-300"><strong>不是。</strong>用牛頓第三定律檢查：作用力與反作用力必須作用在<strong>兩個不同的物體</strong>上，而且兩個都有施力者。繩子拉球（向心力）的反作用力是「球拉繩子」，作用在繩子上。離心力找不到施力者，所以不可能是誰的反作用力。</p></details>
+      </div>
+
+      <details class="layer l3"><summary>🔬 資優延伸：轉動帳本與科氏力</summary>
+        <div class="inner text-slate-300 space-y-2">
+          <p>在以角速度 $\omega$ 轉動的攝影機裡，質量 $m$、離中心 $r$ 的物體，帳本上要多補一個向外的假想力： $$F_{\text{離}} = m\omega^2 r$$ 剪斷前，冰球在圓盤攝影機裡靜止：$T - m\omega^2 r = 0$，所以繩子拉力 $T = m\omega^2 r$。這和地面攝影機算出的向心力 $m v^2/r$（$v = r\omega$）<strong>完全一樣</strong>。兩台攝影機算出的繩子拉力相同，真的力本來就不會因為換攝影機而改變。</p>
+          <p>仔細看圓盤攝影機裡冰球的軌跡：它不只往外，還<strong>往旁邊彎</strong>。這需要第二個假想力來解釋，叫<strong>科氏力</strong>（Coriolis force）。地球也在自轉，所以颱風在北半球都是逆時針旋轉，就跟它有關。</p>
+          <p><strong>脫水的數字：</strong>轉速每分鐘 1200 轉、半徑 0.25 m 的洗衣槽，$\omega \approx 126$ rad/s，向心加速度 $a = \omega^2 r \approx 3900$ m/s²，約是<strong>重力的 400 倍</strong>。衣服的纖維抓不住水，水就從洞口直直跑掉。</p>
+        </div>
+      </details>
+      <div class="takeaway">💡 一句話帶走：離心力<u>找不到施力者</u>，只出現在跟著轉的攝影機裡，是<u>假想力</u>。從地上看，東西只是想照慣性直直走。</div>
+    </section>
+
+    <!-- ===================== 第 6 站 ===================== -->
+    <section id="s6" class="scroll-mt-20 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-amber-500/15 text-amber-300 border-amber-500/30">6</div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">小測驗：帶得走嗎？</h2>
+        <p class="text-sm text-slate-400">點選答案，馬上看解析。⭐ 是挑戰題。</p></div>
+      </div>
+      <div id="quiz" class="space-y-4"></div>
+      <div id="quiz-score" class="caption text-center font-bold"></div>
+    </section>
+
+    <!-- ===================== 下載 ===================== -->
+    <section id="downloads" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div class="station-num bg-slate-500/15 text-slate-300 border-slate-500/30"><i data-lucide="download" class="w-5 h-5"></i></div>
+        <div><h2 class="text-2xl sm:text-3xl font-extrabold">學習單下載</h2>
+        <p class="text-sm text-slate-400">一份兩用：基本題＋⭐ 挑戰題。</p></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+          <div class="font-bold text-lg">📝 學生版</div>
+          <div class="flex flex-wrap gap-2"><button class="btn" disabled>PDF（製作中）</button><button class="btn" disabled>Word（製作中）</button></div>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+          <div class="font-bold text-lg">🔑 教師版（含答案與講解）</div>
+          <div class="flex flex-wrap gap-2"><button class="btn" disabled>PDF（製作中）</button><button class="btn" disabled>Word（製作中）</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+/* ================= 共用工具 ================= */
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const COL = { v:'#38bdf8', v2:'#7dd3fc', a:'#fb923c', f:'#f87171', ball:'#e2e8f0', text:'#cbd5e1', dim:'#64748b', faint:'#334155', good:'#34d399', amber:'#fbbf24', purple:'#c084fc' };
+const FONT = '"Noto Sans TC", sans-serif';
+
+function setup(id) {
+  const c = document.getElementById(id);
+  const W = +c.getAttribute('width'), H = +c.getAttribute('height');
+  c.width = W * DPR; c.height = H * DPR;
+  c.style.aspectRatio = W + ' / ' + H;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { c, ctx, W, H };
+}
+function arrow(ctx, x1, y1, x2, y2, o = {}) {
+  const col = o.color || '#fff', w = o.w || 3, hl = o.head || 12;
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+  if (L < 2) return;
+  const ux = dx / L, uy = dy / L, h = Math.min(hl, L * 0.6);
+  ctx.save();
+  ctx.globalAlpha = o.alpha ?? 1;
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (o.glow) { ctx.shadowColor = COL.amber; ctx.shadowBlur = 18; }
+  if (o.dash) ctx.setLineDash([8, 6]);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * h * 0.7, y2 - uy * h * 0.7); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - ux * h - uy * h * 0.5, y2 - uy * h + ux * h * 0.5);
+  ctx.lineTo(x2 - ux * h + uy * h * 0.5, y2 - uy * h - ux * h * 0.5);
+  ctx.closePath();
+  if (o.dash) { ctx.lineWidth = 2; ctx.stroke(); } else ctx.fill();
+  if (o.label) {
+    ctx.shadowBlur = 0;
+    ctx.font = `bold ${o.size || 15}px ${FONT}`;
+    ctx.fillStyle = o.labelColor || col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const off = o.lo ?? 20, lx = x2 + ux * off + (o.lox || 0), ly = y2 + uy * off + (o.loy || 0);
+    const tw = ctx.measureText(o.label).width, th = (o.size || 15) + 6;
+    ctx.globalAlpha = (o.alpha ?? 1) * 0.75; ctx.fillStyle = '#020617';
+    ctx.beginPath(); ctx.roundRect(lx - tw / 2 - 4, ly - th / 2, tw + 8, th, 5); ctx.fill();
+    ctx.globalAlpha = o.alpha ?? 1; ctx.fillStyle = o.labelColor || col;
+    ctx.fillText(o.label, lx, ly);
+  }
+  ctx.restore();
+}
+function txt(ctx, s, x, y, o = {}) {
+  ctx.save();
+  ctx.globalAlpha = o.alpha ?? 1;
+  ctx.font = `${o.bold === false ? '' : 'bold '}${o.size || 15}px ${FONT}`;
+  ctx.fillStyle = o.color || COL.text; ctx.textAlign = o.align || 'center'; ctx.textBaseline = o.base || 'middle';
+  ctx.fillText(s, x, y);
+  ctx.restore();
+}
+function dot(ctx, x, y, r, fill, stroke, glow) {
+  ctx.save();
+  if (glow) { ctx.shadowColor = COL.amber; ctx.shadowBlur = 20; }
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.lineWidth = 2; ctx.strokeStyle = stroke; ctx.stroke(); }
+  ctx.restore();
+}
+function ring(ctx, x, y, r, color, w = 1.5, dash) {
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w;
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+}
+function line(ctx, x1, y1, x2, y2, color, w = 2, dash) {
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore();
+}
+function polyline(ctx, pts, color, w = 2, dash, alpha = 1) {
+  if (pts.length < 2) return;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineJoin = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.stroke(); ctx.restore();
+}
+const ease = p => p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+const lerp = (a, b, p) => a + (b - a) * p;
+const $ = id => document.getElementById(id);
+
+/* 只更新畫面上看得到的模擬，省電 */
+const sims = [];
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { e.target._vis = e.isIntersecting; });
+  sims.forEach(s => { s.vis = s.els.some(el => el._vis); });
+});
+function register(els, tick) { const s = { els, tick, vis: false }; sims.push(s); els.forEach(el => io.observe(el)); tick(0); return s; }
+let lastT = performance.now();
+function loop(t) { const dt = Math.min(0.05, (t - lastT) / 1000); lastT = t; sims.forEach(s => { if (s.vis) s.tick(dt); }); requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+
+/* 一組按鈕裡只有一顆被選取 */
+function selectIn(selector, btn) { document.querySelectorAll(selector).forEach(b => b.classList.toggle('sel', b === btn)); }
+
+/* ================= 第 0 站：預測 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-predict');
+  const cx = 450, cy = 200, R = 130, w = 1.6, SLOW = 0.45;
+  let th = Math.PI * 0.15, phase = 'spin', choice = null, P, V, pos, trail = [], tCut = 0, shown = false, thCut = 0;
+  const fb = $('predict-fb'), cutBtn = $('btn-cut');
+
+  document.querySelectorAll('[data-predict]').forEach(b => b.onclick = () => {
+    if (phase !== 'spin') return;
+    choice = b.dataset.predict; selectIn('[data-predict]', b);
+    cutBtn.disabled = false;
+    fb.innerHTML = `你選了 <strong>${choice}</strong>。按「✂ 剪斷繩子」看看結果！（剪斷後會放慢動作）`;
+  });
+  cutBtn.onclick = () => {
+    if (phase !== 'spin' || !choice) return;
+    phase = 'cut'; thCut = th;
+    P = { x: cx + R * Math.cos(th), y: cy - R * Math.sin(th) };
+    V = { x: -R * w * Math.sin(th), y: -R * w * Math.cos(th) };
+    pos = { ...P }; trail = [{ ...P }]; tCut = 0; shown = false; cutBtn.disabled = true;
+    fb.textContent = '剪斷了！看清楚球怎麼飛……';
+  };
+  $('btn-predict-reset').onclick = () => {
+    phase = 'spin'; choice = null; trail = []; shown = false;
+    document.querySelectorAll('[data-predict]').forEach(b => b.classList.remove('sel', 'right', 'wrong'));
+    cutBtn.disabled = true;
+    fb.textContent = '先在上面選一個答案（A、B、C），「剪斷繩子」按鈕才會亮起來。';
+  };
+  function showResult() {
+    shown = true;
+    document.querySelectorAll('[data-predict]').forEach(b => {
+      if (b.dataset.predict === 'B') b.classList.add('right');
+      else if (b.dataset.predict === choice) b.classList.add('wrong');
+    });
+    const why = '繩子一斷，就沒有任何力再把球往圓心拉。沒有力，球只能照<strong>慣性</strong>（牛頓第一定律），維持剪斷那一瞬間的速度，沿<strong>切線</strong>直直走。第 4 站還會再看到它。';
+    fb.innerHTML = choice === 'B'
+      ? `✅ <strong>預測正確！</strong>球沿著切線（B）直直飛出去。${why}`
+      : `❌ 你選了 ${choice}，但球其實沿著<strong>切線（B）</strong>直直飛出去，白色那條就是它真正的路線。${why}`;
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ring(ctx, cx, cy, R, COL.faint, 1.5, [6, 6]);
+    if (phase === 'cut') {
+      const ux = Math.cos(thCut), uy = -Math.sin(thCut);
+      line(ctx, P.x, P.y, P.x + ux * 210, P.y + uy * 210, '#94a3b8', 2, [6, 7]);
+      txt(ctx, 'A', P.x + ux * 228, P.y + uy * 228, { color: '#94a3b8', size: 18 });
+      const sp = [];
+      for (let s = 0; s <= 2.2; s += 0.05) { const a = thCut + s, r = R + 38 * s; sp.push({ x: cx + r * Math.cos(a), y: cy - r * Math.sin(a) }); }
+      polyline(ctx, sp, '#94a3b8', 2, [6, 7]);
+      const e = sp[sp.length - 1]; txt(ctx, 'C', e.x - 14, e.y - 6, { color: '#94a3b8', size: 18 });
+      const vl = Math.hypot(V.x, V.y), tx = V.x / vl, ty = V.y / vl;
+      line(ctx, P.x, P.y, P.x + tx * 600, P.y + ty * 600, COL.good + '66', 2, [6, 7]);
+      txt(ctx, 'B', P.x + tx * 70 + ty * 18, P.y + ty * 70 - tx * 18, { color: COL.good, size: 18 });
+      polyline(ctx, trail, '#ffffff', 3);
+      dot(ctx, P.x, P.y, 4, '#ffffff88');
+      txt(ctx, '✂ 剪斷點', P.x, P.y + 24, { color: '#fda4af', size: 13 });
+    }
+    dot(ctx, cx, cy, 14, '#f59e0b', '#fde68a');
+    txt(ctx, '手', cx, cy, { color: '#1c1917', size: 13 });
+    let bx, by;
+    if (phase === 'spin') { bx = cx + R * Math.cos(th); by = cy - R * Math.sin(th); line(ctx, cx, cy, bx, by, '#fde68a', 2); }
+    else { bx = pos.x; by = pos.y; }
+    dot(ctx, bx, by, 13, COL.ball, '#fff');
+    txt(ctx, phase === 'spin' ? '球在繞圈（俯視圖：從正上方往下看）' : '剪斷後（慢動作）', 18, 24, { align: 'left', color: COL.dim, size: 14 });
+  }
+  register([c], dt => {
+    if (phase === 'spin') th += w * dt;
+    else {
+      tCut += dt;
+      pos.x += V.x * dt * SLOW; pos.y += V.y * dt * SLOW;
+      if (pos.x > -30 && pos.x < W + 30 && pos.y > -30 && pos.y < H + 30) trail.push({ ...pos });
+      if (tCut > 1.3 && !shown) showResult();
+    }
+    draw();
+  });
+})();
+
+/* ================= 第 1 站：速度 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-vel');
+  const O = { x: 270, y: 215 }, R = 150, L = 95, C = { x: 690, y: 215 }, w = 1.1, STEP = Math.PI / 6;
+  let th = 0, target = 0, playing = false, k = 0, stamps = [0];
+  const cap = $('vel-cap'), playBtn = $('vel-play');
+  const dirOf = a => ({ x: -Math.sin(a), y: -Math.cos(a) });
+  playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? '⏸ 暫停' : '▶ 播放'; if (!playing) target = (k + 1) * STEP; };
+  $('vel-next').onclick = () => { if (playing) { playing = false; playBtn.textContent = '▶ 播放'; } if (th >= target - 1e-9) target = (k + 1) * STEP; };
+  $('vel-reset').onclick = () => { th = 0; target = 0; k = 0; stamps = [0]; playing = false; playBtn.textContent = '▶ 播放'; updateCap(); };
+  function updateCap() {
+    const deg = (k * 30) % 360;
+    cap.innerHTML = `第 ${k} 格：速率 <strong class="text-sky-300">4.0 m/s（沒變）</strong>｜速度方向已經轉了 <strong class="text-orange-300">${k * 30}°</strong>` + (k >= 12 ? '（已經繞完一圈以上）' : '') +
+      (k === 0 ? '。按「下一步」讓球走 30°。' : deg === 0 ? '：轉回原本的方向了，一圈剛好轉 360°。' : '。');
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ring(ctx, O.x, O.y, R, COL.faint, 1.5, [6, 6]);
+    dot(ctx, O.x, O.y, 4, COL.dim); txt(ctx, '圓心', O.x, O.y + 18, { color: COL.dim, size: 13 });
+    const n = stamps.length;
+    stamps.forEach((a, i) => {
+      const px = O.x + R * Math.cos(a), py = O.y - R * Math.sin(a), d = dirOf(a), al = 0.25 + 0.5 * (i + 1) / n;
+      dot(ctx, px, py, 4, COL.dim);
+      arrow(ctx, px, py, px + d.x * L * 0.75, py + d.y * L * 0.75, { color: COL.v, alpha: al, w: 2.5 });
+      arrow(ctx, C.x, C.y, C.x + d.x * L, C.y + d.y * L, { color: COL.v, alpha: al, w: 2.5 });
+    });
+    const bx = O.x + R * Math.cos(th), by = O.y - R * Math.sin(th), d = dirOf(th);
+    line(ctx, O.x, O.y, bx, by, COL.faint, 1.5, [4, 5]);
+    dot(ctx, bx, by, 12, COL.ball, '#fff');
+    arrow(ctx, bx, by, bx + d.x * L * 0.75, by + d.y * L * 0.75, { color: COL.v, w: 4, label: 'v', lo: 16 });
+    // 收藏盒
+    ring(ctx, C.x, C.y, L, '#1e3a5f', 1.5, [4, 6]);
+    arrow(ctx, C.x, C.y, C.x + d.x * L, C.y + d.y * L, { color: '#fff', w: 3 });
+    dot(ctx, C.x, C.y, 5, COL.v);
+    txt(ctx, '速度收藏盒', C.x, 40, { color: COL.v2, size: 16 });
+    txt(ctx, '把每支速度箭頭的尾巴對齊放在一起', C.x, 64, { color: COL.dim, size: 13 });
+    txt(ctx, '長度都一樣（快慢不變），只有方向在轉', C.x, H - 30, { color: COL.dim, size: 13 });
+    txt(ctx, '俯視圖：球逆時針繞圈', 18, 24, { align: 'left', color: COL.dim, size: 14 });
+    line(ctx, 480, 30, 480, H - 30, '#1e293b', 1.5);
+  }
+  updateCap();
+  register([c], dt => {
+    if (playing || th < target - 1e-9) {
+      th = playing ? th + w * dt : Math.min(th + w * dt, target);
+      let changed = false;
+      while (th >= (k + 1) * STEP - 1e-9) { k++; stamps.push(k * STEP); if (stamps.length > 12) stamps.shift(); changed = true; }
+      if (changed) updateCap();
+      if (playing) target = th;
+    }
+    draw();
+  });
+})();
+
+/* ================= 第 2 站：Δv 逐步作圖 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-dv');
+  const O = { x: 450, y: 300 }, R = 175, VL = 165;
+  let step = 0, p = 1, dth = 50 * Math.PI / 180, auto = false, wait = 0;
+  const cap = $('dv-cap'), autoBtn = $('dv-auto');
+  const CAPS = [
+    '球沿著圓<strong>逆時針</strong>從 A 跑到 B。我們要找出：從 A 到 B，速度「改變了多少」？按「下一步」開始。',
+    '動作 1：畫出 A 點的速度 <strong class="text-sky-300">v₁</strong>。它貼著圓（切線方向），和半徑垂直。',
+    '動作 2：畫出 B 點的速度 <strong class="text-sky-200">v₂</strong>。長度和 v₁ 一樣（快慢沒變），但方向轉了一點。',
+    '動作 3：把 v₂ <strong>平移</strong>到 A 點，讓兩支箭頭的尾巴對齊。平移不會改變箭頭的長度和方向，所以 v₂ 還是 v₂。',
+    '動作 4：從 v₁ 的箭頭尖端，畫到 v₂ 的箭頭尖端，這支<strong class="text-orange-300">橘色箭頭 Δv</strong> 就是「速度的改變量」（v₁ ＋ Δv ＝ v₂）。',
+    '動作 5：把 Δv 搬回 A、B 正中間的圓上……<strong class="text-orange-300">它指向圓心！</strong>速度的改變指向圓心 → <strong>加速度指向圓心</strong>。'
+  ];
+  const ang = (a) => ({ x: O.x + R * Math.cos(a), y: O.y - R * Math.sin(a) });
+  const vel = (a) => ({ x: -Math.sin(a) * VL, y: -Math.cos(a) * VL });
+  function setStep(s, anim) { step = Math.max(0, Math.min(5, s)); p = anim ? 0 : 1; cap.innerHTML = CAPS[step]; $('dv-stepnum').textContent = `動作 ${step} / 5`; }
+  $('dv-next').onclick = () => { stopAuto(); if (step < 5) setStep(step + 1, true); };
+  $('dv-prev').onclick = () => { stopAuto(); setStep(step - 1, false); };
+  $('dv-reset').onclick = () => { stopAuto(); setStep(0, false); };
+  function stopAuto() { auto = false; autoBtn.textContent = '▶ 自動播放'; }
+  autoBtn.onclick = () => { if (auto) { stopAuto(); return; } auto = true; autoBtn.textContent = '⏸ 暫停'; if (step === 5) setStep(0, false); wait = 0.6; };
+  $('dv-angle').oninput = e => { dth = e.target.value * Math.PI / 180; $('dv-angle-val').textContent = e.target.value + '°'; updateNum(); };
+  function updateNum() {
+    const v = 4, r = 2, d = dth, dt = r * d / v, dv = 2 * v * Math.sin(d / 2);
+    $('dv-num').innerHTML = `資優數字列（v＝4 m/s，r＝2 m）｜Δθ＝${(d * 180 / Math.PI).toFixed(0)}°　|Δv|＝${dv.toFixed(3)} m/s　Δt＝${dt.toFixed(3)} s　Δv/Δt＝<strong>${(dv / dt).toFixed(3)}</strong> m/s²　（v²/r＝8.000）`;
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const mid = Math.PI / 2, a1 = mid - dth / 2, a2 = mid + dth / 2;
+    const A = ang(a1), B = ang(a2), M = ang(mid), v1 = vel(a1), v2 = vel(a2);
+    const dv = { x: v2.x - v1.x, y: v2.y - v1.y };
+    const e = ease(p);
+    ring(ctx, O.x, O.y, R, COL.faint, 1.5, [6, 6]);
+    // 弧 A→B
+    ctx.save(); ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(O.x, O.y, R, -a2, -a1); ctx.stroke(); ctx.restore();
+    dot(ctx, O.x, O.y, 5, COL.dim); txt(ctx, '圓心 O', O.x, O.y + 20, { color: COL.dim, size: 14 });
+    line(ctx, O.x, O.y, A.x, A.y, '#1e293b', 1.5); line(ctx, O.x, O.y, B.x, B.y, '#1e293b', 1.5);
+    dot(ctx, A.x, A.y, 7, '#a5b4fc'); dot(ctx, B.x, B.y, 7, '#a5b4fc');
+    txt(ctx, 'A', A.x + 12, A.y + 22, { color: '#a5b4fc', size: 18 });
+    txt(ctx, 'B', B.x - 12, B.y + 22, { color: '#a5b4fc', size: 18 });
+    if (step === 0) { dot(ctx, lerp(A.x, B.x, 0.5), M.y - 2, 0); arrow(ctx, A.x + 6, A.y - 30, B.x - 6, B.y - 30, { color: '#6366f155', w: 2 }); }
+    // v1
+    if (step >= 1) { const g = step === 1 ? e : 1; arrow(ctx, A.x, A.y, A.x + v1.x * g, A.y + v1.y * g, { color: COL.v, w: 4, label: 'v₁', loy: -2 }); }
+    // v2 原位
+    if (step >= 2) { const g = step === 2 ? e : 1; arrow(ctx, B.x, B.y, B.x + v2.x * g, B.y + v2.y * g, { color: COL.v2, w: 4, alpha: step >= 3 ? 0.3 : 1, label: step >= 3 ? '' : 'v₂' }); }
+    // v2 平移到 A
+    if (step >= 3) {
+      const q = step === 3 ? e : 1, tx = lerp(B.x, A.x, q), ty = lerp(B.y, A.y, q);
+      if (step === 3 && p < 1) line(ctx, B.x, B.y, tx, ty, '#7dd3fc55', 1.5, [3, 4]);
+      arrow(ctx, tx, ty, tx + v2.x, ty + v2.y, { color: COL.v2, w: 4, label: 'v₂', lo: 22 });
+    }
+    // Δv
+    if (step >= 4) {
+      const t1 = { x: A.x + v1.x, y: A.y + v1.y };
+      if (step === 4) {
+        arrow(ctx, t1.x, t1.y, t1.x + dv.x * e, t1.y + dv.y * e, { color: COL.a, w: 4.5, label: e > 0.9 ? 'Δv' : '', lox: 18, loy: 0 });
+      } else {
+        arrow(ctx, t1.x, t1.y, t1.x + dv.x, t1.y + dv.y, { color: COL.a, w: 3, alpha: 0.3 });
+        const sx = lerp(t1.x, M.x, e), sy = lerp(t1.y, M.y, e);
+        if (p > 0.6) {
+          const al = Math.min(1, (p - 0.6) / 0.4);
+          line(ctx, M.x, M.y, O.x, O.y, COL.a, 2, [6, 6]);
+          txt(ctx, '指向圓心！', O.x + 70, (M.y + O.y) / 2 + 10, { color: COL.a, size: 18, alpha: al });
+          txt(ctx, '→ 加速度 a 也指向圓心', O.x + 70, (M.y + O.y) / 2 + 36, { color: '#fdba74', size: 14, alpha: al });
+        }
+        arrow(ctx, sx, sy, sx + dv.x, sy + dv.y, { color: COL.a, w: 5, label: 'Δv', lox: -26, loy: -10 });
+      }
+    }
+    txt(ctx, '俯視圖', 18, 24, { align: 'left', color: COL.dim, size: 14 });
+  }
+  setStep(0, false); updateNum();
+  register([c], dt => {
+    if (p < 1) p = Math.min(1, p + dt / 1.0);
+    else if (auto) {
+      wait -= dt;
+      if (wait <= 0) { if (step < 5) { setStep(step + 1, true); wait = 1.6; } else stopAuto(); }
+    }
+    draw();
+  });
+})();
+
+/* ================= 第 3 站：向心力的角色 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-roles');
+  const O = { x: 450, y: 215 }, R = 145, w = 0.9, FL = 75;
+  const SCENES = {
+    rope:  { actor: '繩子的拉力', who: '繩子 → 球', gone: '繩子斷了：球沿切線飛出', btn: '✂ 剪斷繩子', label: '繩子拉力' },
+    moon:  { actor: '地球的萬有引力', who: '地球 → 月球', gone: '引力消失：月球沿切線飛離地球', btn: '🌌 關掉引力（假想）', label: '地球引力' },
+    car:   { actor: '地面給輪胎的摩擦力', who: '路面 → 汽車', gone: '路面結冰：車子沿切線衝出彎道', btn: '🧊 路面結冰', label: '摩擦力' },
+    rotor: { actor: '牆壁的推力（正向力）', who: '牆壁 → 人', gone: '牆開一扇門：人沿切線滑出去', btn: '🚪 牆壁打開', label: '牆壁推力' }
+  };
+  let scene = 'rope', th = 0.3, released = false, pos, vel, thR = 0;
+  function setScene(s) {
+    scene = s; const S = SCENES[s];
+    $('role-actor').textContent = S.actor; $('role-who').textContent = S.who; $('role-gone').textContent = S.gone;
+    $('roles-release').textContent = S.btn; reset();
+  }
+  function reset() { released = false; th = 0.3; $('roles-release').disabled = false; }
+  document.querySelectorAll('[data-scene]').forEach(b => b.onclick = () => { selectIn('[data-scene]', b); setScene(b.dataset.scene); });
+  $('roles-reset').onclick = reset;
+  $('roles-release').onclick = () => {
+    if (released) return;
+    released = true; thR = th;
+    pos = { x: O.x + R * Math.cos(th), y: O.y - R * Math.sin(th) };
+    vel = { x: -R * w * Math.sin(th), y: -R * w * Math.cos(th) };
+    $('roles-release').disabled = true;
+  };
+  function drawObject(x, y, a) {
+    if (scene === 'rope') dot(ctx, x, y, 12, COL.ball, '#fff');
+    else if (scene === 'moon') { dot(ctx, x, y, 13, '#9ca3af', '#d1d5db'); dot(ctx, x - 4, y - 3, 3, '#6b7280'); dot(ctx, x + 4, y + 4, 2, '#6b7280'); }
+    else if (scene === 'car') {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(-a - Math.PI / 2);
+      ctx.fillStyle = '#fbbf24'; ctx.fillRect(-18, -10, 36, 20);
+      ctx.fillStyle = '#1e293b'; ctx.fillRect(-14, -7, 9, 14); ctx.fillRect(6, -7, 7, 14);
+      ctx.restore();
+    } else {
+      dot(ctx, x, y, 11, '#f472b6', '#fbcfe8'); dot(ctx, x, y, 4, '#831843');
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // 場景背景
+    if (scene === 'car') { ring(ctx, O.x, O.y, R, '#334155', 46); ring(ctx, O.x, O.y, R, '#e2e8f055', 1.5, [12, 12]); txt(ctx, '彎道（俯視）', O.x, O.y, { color: COL.dim, size: 14 }); }
+    else ring(ctx, O.x, O.y, R, COL.faint, 1.5, [6, 6]);
+    if (scene === 'moon') {
+      const g = ctx.createRadialGradient(O.x - 10, O.y - 10, 5, O.x, O.y, 40);
+      g.addColorStop(0, '#60a5fa'); g.addColorStop(1, '#1e40af');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(O.x, O.y, 38, 0, Math.PI * 2); ctx.fill();
+      txt(ctx, '地球', O.x, O.y, { color: '#fff', size: 14 });
+    }
+    if (scene === 'rope') { dot(ctx, O.x, O.y, 8, '#f59e0b'); }
+    if (scene === 'rotor') {
+      if (!released) ring(ctx, O.x, O.y, R + 16, '#94a3b8', 8);
+      else {
+        ctx.save(); ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 8; ctx.beginPath();
+        ctx.arc(O.x, O.y, R + 16, -thR + 0.35, -thR - 0.35 + Math.PI * 2); ctx.stroke(); ctx.restore();
+      }
+      txt(ctx, '旋轉圓筒（俯視）', O.x, O.y, { color: COL.dim, size: 14 });
+    }
+    let x, y, a;
+    if (!released) {
+      a = th; x = O.x + R * Math.cos(th); y = O.y - R * Math.sin(th);
+      if (scene === 'rope') line(ctx, O.x, O.y, x, y, COL.f, 2.5);
+      const ux = (O.x - x) / R, uy = (O.y - y) / R;
+      const sx = scene === 'rotor' ? x - ux * 14 : x, sy = scene === 'rotor' ? y - uy * 14 : y;
+      arrow(ctx, sx, sy, sx + ux * FL, sy + uy * FL, { color: COL.f, w: 4.5, label: SCENES[scene].label, lo: 34, size: 14 });
+      const d = { x: -Math.sin(th), y: -Math.cos(th) };
+      arrow(ctx, x, y, x + d.x * 70, y + d.y * 70, { color: COL.v, w: 3, label: 'v', lo: 14 });
+      txt(ctx, `紅色箭頭＝擔任向心力的真實力：${SCENES[scene].actor}`, 18, H - 20, { align: 'left', color: '#fca5a5', size: 14 });
+    } else {
+      a = thR; x = pos.x; y = pos.y;
+      const sx = O.x + R * Math.cos(thR), sy = O.y - R * Math.sin(thR);
+      line(ctx, sx, sy, x, y, '#ffffff88', 2, [6, 6]);
+      const vl = Math.hypot(vel.x, vel.y);
+      arrow(ctx, x, y, x + vel.x / vl * 70, y + vel.y / vl * 70, { color: COL.v, w: 3, label: 'v', lo: 14 });
+      txt(ctx, '力消失了 → 沒有東西再讓它轉彎 → 沿切線直直走', 18, H - 20, { align: 'left', color: COL.good, size: 14 });
+    }
+    drawObject(x, y, a);
+  }
+  setScene('rope');
+  register([c], dt => {
+    if (!released) th += w * dt;
+    else if (pos.x > -60 && pos.x < W + 60 && pos.y > -60 && pos.y < H + 60) { pos.x += vel.x * dt; pos.y += vel.y * dt; }
+    draw();
+  });
+})();
+
+/* ================= 第 4 站：力的大小 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-mag');
+  const O = { x: 230, y: 200 }, FMAX = 40, BX = 520, BW = 340, FSCALE = BW / 100;
+  let m = 1, v = 3, r = 1, th = 0, snapped = false, pos, vel, hl = null, hlT = 0, recs = [];
+  const cap = $('mag-cap');
+  const F = () => m * v * v / r;
+  function read() {
+    m = +$('sl-m').value; v = +$('sl-v').value; r = +$('sl-r').value;
+    $('val-m').textContent = m.toFixed(1); $('val-v').textContent = v.toFixed(1); $('val-r').textContent = r.toFixed(2);
+    updateCap();
+  }
+  function updateCap() {
+    const f = F();
+    if (snapped) cap.innerHTML = `💥 <strong class="text-red-300">繩子斷了！</strong>轉這個圈需要 ${f.toFixed(1)} N，繩子最多只能給 ${FMAX} N。沒有力拉住，球就沿<strong>切線</strong>飛出去（這就是第 0 站的答案 B）。把力調小，再按「換一條新繩子」。`;
+    else cap.innerHTML = `轉這個圈需要的向心力 ＝ <strong class="text-red-300 mono">${f.toFixed(1)} N</strong>　｜　繩子最多能給 ${FMAX} N　｜　${f > FMAX * 0.75 ? '<span class="text-amber-300">⚠ 快到極限了！</span>' : '安全'}`;
+  }
+  ['sl-m', 'sl-v', 'sl-r'].forEach(id => $(id).addEventListener('input', read));
+  $('mag-newrope').onclick = () => { if (F() > FMAX) { cap.innerHTML = `⚠ 現在需要 ${F().toFixed(1)} N，比 ${FMAX} N 大，新繩子也會馬上斷。請先把力調小。`; return; } snapped = false; updateCap(); };
+  $('mag-record').onclick = () => {
+    recs.push({ m, v, r, f: F() });
+    $('rec-body').innerHTML = recs.map((x, i) => `<tr><td>${i + 1}</td><td>${x.m.toFixed(1)}</td><td>${x.v.toFixed(1)}</td><td>${x.r.toFixed(2)}</td><td class="text-red-300">${x.f.toFixed(1)}</td></tr>`).join('');
+  };
+  $('mag-clear').onclick = () => { recs = []; $('rec-body').innerHTML = '<tr><td colspan="5" class="text-slate-500">還沒有紀錄</td></tr>'; };
+  document.querySelectorAll('[data-hl]').forEach(ch => ch.onclick = () => {
+    hl = ch.dataset.hl; hlT = 1.8;
+    const wrap = $('wrap-' + hl); wrap.classList.add('glow'); setTimeout(() => wrap.classList.remove('glow'), 1800);
+    c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const rp = r * 75, f = F();
+    ring(ctx, O.x, O.y, rp, COL.faint, 1.5, [6, 6]);
+    dot(ctx, O.x, O.y, 8, '#f59e0b');
+    const ballR = 7 + m * 4;
+    if (!snapped) {
+      const x = O.x + rp * Math.cos(th), y = O.y - rp * Math.sin(th);
+      line(ctx, O.x, O.y, x, y, hl === 'r' ? COL.amber : '#fde68a', hl === 'r' ? 4 : 2);
+      if (hl === 'r') txt(ctx, 'r', (O.x + x) / 2 + 12, (O.y + y) / 2 - 12, { color: COL.amber, size: 18 });
+      const ux = (O.x - x) / rp, uy = (O.y - y) / rp, fl = Math.min(150, 12 + f * 1.6);
+      arrow(ctx, x, y, x + ux * Math.min(fl, rp - 4), y + uy * Math.min(fl, rp - 4), { color: COL.f, w: 4, label: 'F', lo: 14 });
+      const d = { x: -Math.sin(th), y: -Math.cos(th) }, vl = 20 + v * 11;
+      arrow(ctx, x, y, x + d.x * vl, y + d.y * vl, { color: COL.v, w: hl === 'v' ? 5 : 3, glow: hl === 'v', label: 'v', lo: 14 });
+      dot(ctx, x, y, ballR, COL.ball, '#fff', hl === 'm');
+    } else {
+      dot(ctx, pos.x, pos.y, ballR, COL.ball, '#fff');
+      const vl = Math.hypot(vel.x, vel.y);
+      arrow(ctx, pos.x, pos.y, pos.x + vel.x / vl * 50, pos.y + vel.y / vl * 50, { color: COL.v, w: 3 });
+      txt(ctx, '💥 繩子斷了！', O.x, 30, { color: COL.f, size: 18 });
+    }
+    // 長條圖
+    line(ctx, BX - 30, 40, BX - 30, H - 40, '#1e293b', 1.5);
+    const over = f > FMAX;
+    txt(ctx, '轉這個圈「需要」的力', BX, 95, { align: 'left', color: COL.text, size: 15 });
+    ctx.fillStyle = '#1e293b'; ctx.fillRect(BX, 110, BW, 34);
+    ctx.fillStyle = over ? '#dc2626' : '#f87171'; ctx.fillRect(BX, 110, Math.min(BW, f * FSCALE), 34);
+    txt(ctx, f.toFixed(1) + ' N' + (f > 100 ? '（超出圖表）' : ''), BX + 8, 127, { align: 'left', color: '#fff', size: 15 });
+    txt(ctx, '繩子「最多能給」的力', BX, 200, { align: 'left', color: COL.text, size: 15 });
+    ctx.fillStyle = '#1e293b'; ctx.fillRect(BX, 215, BW, 34);
+    ctx.fillStyle = '#64748b'; ctx.fillRect(BX, 215, FMAX * FSCALE, 34);
+    txt(ctx, FMAX + ' N', BX + 8, 232, { align: 'left', color: '#fff', size: 15 });
+    line(ctx, BX + FMAX * FSCALE, 100, BX + FMAX * FSCALE, 260, COL.amber, 2, [5, 5]);
+    txt(ctx, '斷裂線', BX + FMAX * FSCALE, 280, { color: COL.amber, size: 13 });
+    txt(ctx, over ? '需要 ＞ 最多能給 → 斷！' : '需要 ≤ 最多能給 → 安全', BX, 330, { align: 'left', color: over ? COL.f : COL.good, size: 16 });
+  }
+  read();
+  register([c], dt => {
+    if (hlT > 0) { hlT -= dt; if (hlT <= 0) hl = null; }
+    const wv = 0.55 * v / r;
+    if (!snapped) {
+      th += wv * dt;
+      if (F() > FMAX) {
+        snapped = true; const rp = r * 75;
+        pos = { x: O.x + rp * Math.cos(th), y: O.y - rp * Math.sin(th) };
+        vel = { x: -rp * wv * Math.sin(th), y: -rp * wv * Math.cos(th) };
+        updateCap();
+      }
+    } else if (pos.x > -40 && pos.x < 500 && pos.y > -40 && pos.y < H + 40) { pos.x += vel.x * dt; pos.y += vel.y * dt; }
+    draw();
+  });
+})();
+
+/* ================= 第 5 站之一：公車急煞 ================= */
+(function () {
+  const G = setup('cv-brake-g'), B = setup('cv-brake-b');
+  const V0 = 170, TB = 0.9, DEC = 230, TSTOP = V0 / DEC, LB = 270, BH = 92, ROAD = 172, X0 = 40, REL0 = 40, BALLR = 12;
+  const WALL = LB - 14 - BALLR, TEND = 3.6, BUSFIX = 300;
+  let t = 0, running = false;
+  const cap = $('brake-cap');
+  function xb(t) { if (t < TB) return X0 + V0 * t; const tau = Math.min(t - TB, TSTOP); return X0 + V0 * TB + V0 * tau - 0.5 * DEC * tau * tau; }
+  function vb(t) { if (t < TB) return V0; return Math.max(0, V0 - DEC * (t - TB)); }
+  function rel(t) { return Math.min(X0 + REL0 + V0 * t - xb(t), WALL); }
+  function ballV(t) { return rel(t) >= WALL - 1e-6 ? vb(t) : V0; }
+  $('brake-go').onclick = () => { t = 0; running = true; };
+  function phase() {
+    if (t < TB) return 0; if (rel(t) >= WALL - 1e-6) return 3; if (t < TB + TSTOP) return 1; return 2;
+  }
+  const CAPS = [
+    '公車和球一起<strong>等速</strong>前進。兩台攝影機都看到：球和車廂一起走，相對車廂不動。',
+    '司機<strong>踩煞車</strong>！<span class="text-sky-300">地面攝影機</span>：車子慢下來，球的速度箭頭<strong>一樣長</strong>（地板很滑，沒有力讓它慢下來）。<span class="text-purple-300">車上攝影機</span>：球自己往前衝，好像被一股力往前推。',
+    '車子停了，球還在照原本的速度前進。地面看：它只是<strong>維持原本的運動（慣性）</strong>。車上看：球一直往前滑。',
+    '球撞到前面的車廂牆壁才停下。<strong>是牆壁（真的力）讓球停下來的。</strong>想一想：上下兩個畫面，哪一個需要「假想的力」才說得通？'
+  ];
+  function drawBus(ctx, x, label) {
+    ctx.save();
+    ctx.fillStyle = '#1e3a8a'; ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(x, ROAD - BH - 8, LB, BH, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#0f172a'; ctx.fillRect(x + 6, ROAD - 14, LB - 12, 6);
+    for (let i = 0; i < 4; i++) { ctx.fillStyle = '#93c5fd33'; ctx.fillRect(x + 18 + i * 62, ROAD - BH + 4, 46, 28); }
+    ctx.fillStyle = '#60a5fa'; ctx.fillRect(x + LB - 14, ROAD - BH - 8, 6, BH - 8);
+    ctx.restore();
+    dot(ctx, x + 50, ROAD + 2, 13, '#0f172a', '#94a3b8'); dot(ctx, x + LB - 50, ROAD + 2, 13, '#0f172a', '#94a3b8');
+    txt(ctx, label, x + LB / 2, ROAD - BH - 22, { color: '#93c5fd', size: 13 });
+  }
+  function drawTree(ctx, x) { ctx.fillStyle = '#14532d'; ctx.beginPath(); ctx.arc(x, ROAD - 60, 16, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#78350f'; ctx.fillRect(x - 3, ROAD - 46, 6, 46); }
+  function draw() {
+    const ph = phase(), braking = t >= TB && ph < 3 && rel(t) < WALL - 1e-6;
+    // 地面攝影機
+    let ctx = G.ctx; ctx.clearRect(0, 0, G.W, G.H);
+    for (let x = 80; x < G.W; x += 150) drawTree(ctx, x);
+    line(ctx, 0, ROAD + 15, G.W, ROAD + 15, '#475569', 2);
+    const X = xb(t); drawBus(ctx, X, t >= TB && t < TB + TSTOP ? '煞車中' : '');
+    const bxg = X + rel(t);
+    dot(ctx, bxg, ROAD - 8 - BALLR, BALLR, COL.ball, '#fff');
+    arrow(ctx, X + LB / 2, 30, X + LB / 2 + vb(t) * 0.45, 30, { color: COL.amber, w: 3, label: vb(t) > 5 ? '車速' : '', lo: 28 });
+    arrow(ctx, bxg, ROAD - 8 - BALLR * 2 - 18, bxg + ballV(t) * 0.45, ROAD - 8 - BALLR * 2 - 18, { color: COL.v, w: 3, label: '球速', lo: 28 });
+    txt(ctx, '🎥 地面攝影機：架在路邊不動', 14, 20, { align: 'left', color: '#7dd3fc', size: 14 });
+    // 車上攝影機
+    ctx = B.ctx; ctx.clearRect(0, 0, B.W, B.H);
+    const shift = X - X0;
+    for (let x = 80 - (shift % 150) - 150; x < B.W + 150; x += 150) drawTree(ctx, x);
+    line(ctx, 0, ROAD + 15, B.W, ROAD + 15, '#475569', 2);
+    drawBus(ctx, BUSFIX, '');
+    const bxb = BUSFIX + rel(t), by = ROAD - 8 - BALLR;
+    dot(ctx, bxb, by, BALLR, COL.ball, '#fff');
+    const rv = ballV(t) - vb(t);
+    if (rv > 3) arrow(ctx, bxb, by - BALLR - 46, bxb + rv * 0.45, by - BALLR - 46, { color: COL.v, w: 3, label: '球速', lo: 28 });
+    if (braking) arrow(ctx, bxb + BALLR + 4, by, bxb + BALLR + 70, by, { color: COL.f, w: 3, dash: true, label: '好像有力往前推？', lo: 0, lox: 60, loy: 0, size: 14 });
+    txt(ctx, '🚌 車上攝影機：黏在車上，跟著一起煞車', 14, 20, { align: 'left', color: COL.purple, size: 14 });
+    cap.innerHTML = CAPS[ph];
+  }
+  register([G.c, B.c], dt => {
+    if (running) { t += dt * ($('brake-slow').checked ? 0.35 : 1); if (t >= TEND) { t = TEND; running = false; } }
+    draw();
+  });
+
+  const FB = {
+    driver: '❌ 司機踩的是煞車，煞車讓<strong>車子</strong>減速，可是司機沒有碰到球。',
+    floor: '❌ 地板很滑，幾乎沒有摩擦力。就算有，地板的摩擦力也是往<strong>後</strong>拖住球，不會往前推。',
+    air: '❌ 車裡的空氣跟著車子一起動，沒有往前吹球的風。',
+    none: '✅ <strong>答對了！找不到施力者。</strong>在地面攝影機裡，球只是照慣性前進，根本沒有往前的力。這股「往前推的力」只出現在跟著煞車的攝影機裡，是攝影機自己減速造成的錯覺，叫做<strong>假想力</strong>。'
+  };
+  document.querySelectorAll('[data-who]').forEach(b => b.onclick = () => {
+    document.querySelectorAll('[data-who]').forEach(x => x.classList.remove('right', 'wrong'));
+    b.classList.add(b.dataset.who === 'none' ? 'right' : 'wrong');
+    $('who-brake-fb').innerHTML = FB[b.dataset.who];
+  });
+})();
+
+/* ================= 第 5 站之二：旋轉圓盤雙鏡頭 ================= */
+(function () {
+  const Gs = setup('cv-disk-g'), Rs = setup('cv-disk-r');
+  const C = 220, R = 170, R0 = 70;
+  let w = 0.8, t = 0, cut = false, tr, P, V, gTrail = [], rTrail = [], flying = true;
+  const cap = $('disk-cap');
+  function reset() { t = 0; cut = false; gTrail = []; rTrail = []; flying = true; $('disk-cut').disabled = false; setCap(); }
+  $('disk-reset').onclick = reset;
+  $('disk-w').oninput = e => { w = +e.target.value; $('disk-w-val').textContent = w.toFixed(1); reset(); };
+  $('disk-cut').onclick = () => {
+    if (cut) return; cut = true; tr = t; $('disk-cut').disabled = true;
+    const a = w * t; P = { x: R0 * Math.cos(a), y: R0 * Math.sin(a) }; V = { x: -w * R0 * Math.sin(a), y: w * R0 * Math.cos(a) };
+    setCap();
+  };
+  function setCap() {
+    cap.innerHTML = !cut
+      ? '<strong>剪斷之前：</strong><span class="text-sky-300">地面攝影機</span>看到冰球繞圈，繩子拉力（紅）指向圓心，就是向心力。<span class="text-purple-300">圓盤攝影機</span>卻看到冰球<strong>完全不動</strong>。繩子明明在拉它，它卻不動？帳算不平，只好畫一支往外的<strong>虛線</strong>，也就是「離心力」。'
+      : '<strong>剪斷之後：</strong><span class="text-sky-300">地面攝影機</span>：冰球走<strong>直線</strong>（白線），沒有任何力在推它，是圓盤在它底下轉走了。<span class="text-purple-300">圓盤攝影機</span>：冰球彎彎地「被甩出去」。同一顆冰球，兩種故事。<strong>哪一個畫面需要「找不到施力者的力」？</strong>';
+  }
+  // 世界座標（x 右、y 上）→ 畫布
+  const toC = (p) => ({ x: C + p.x, y: C - p.y });
+  const rot = (p, a) => ({ x: p.x * Math.cos(a) - p.y * Math.sin(a), y: p.x * Math.sin(a) + p.y * Math.cos(a) });
+  function puckWorld() {
+    if (!cut) { const a = w * t; return { x: R0 * Math.cos(a), y: R0 * Math.sin(a) }; }
+    const s = t - tr; return { x: P.x + V.x * s, y: P.y + V.y * s };
+  }
+  function drawDisk(ctx, ang, isRot) {
+    const N = 8;
+    for (let i = 0; i < N; i++) {
+      ctx.beginPath(); ctx.moveTo(C, C);
+      ctx.arc(C, C, R, -(ang + i * 2 * Math.PI / N), -(ang + (i + 1) * 2 * Math.PI / N), true);
+      ctx.closePath(); ctx.fillStyle = i % 2 ? '#1e1b4b' : '#27234f'; ctx.fill();
+    }
+    ring(ctx, C, C, R, '#818cf8', 3);
+    // 圓盤上的攝影機（跟著圓盤）
+    const cam = toC(rot({ x: 0, y: R - 22 }, ang));
+    txt(ctx, '🎠', cam.x, cam.y, { size: 22 });
+    if (!isRot) txt(ctx, '🎥', 26, 26, { size: 22 });
+    dot(ctx, C, C, 8, '#f59e0b', '#fde68a');
+  }
+  function drawView(S, isRot) {
+    const ctx = S.ctx; ctx.clearRect(0, 0, S.W, S.H);
+    const ang = isRot ? 0 : w * t;
+    drawDisk(ctx, ang, isRot);
+    const trail = isRot ? rTrail : gTrail;
+    polyline(ctx, trail.map(toC), isRot ? COL.purple : '#ffffff', 3);
+    let p = puckWorld(); if (isRot) p = rot(p, -w * t);
+    const q = toC(p), r = Math.hypot(p.x, p.y);
+    if (!cut) {
+      line(ctx, C, C, q.x, q.y, '#fca5a5', 2.5);
+      const ux = (C - q.x) / r, uy = (C - q.y) / r;
+      arrow(ctx, q.x, q.y, q.x + ux * 52, q.y + uy * 52, { color: COL.f, w: 4, label: '拉力', lo: 0, lox: ux > 0 ? -10 : 10, loy: -16, size: 13 });
+      if (isRot) {
+        arrow(ctx, q.x, q.y, q.x - ux * 52, q.y - uy * 52, { color: COL.f, w: 3, dash: true, label: '離心力？', lo: 26, size: 13 });
+        txt(ctx, '冰球：靜止不動', C, S.H - 18, { color: COL.purple, size: 14 });
+      } else {
+        const d = rot({ x: 0, y: 1 }, w * t);
+        arrow(ctx, q.x, q.y, q.x + d.x * 45, q.y - d.y * 45, { color: COL.v, w: 3, label: 'v', lo: 12 });
+        txt(ctx, '冰球：繞圈', C, S.H - 18, { color: '#7dd3fc', size: 14 });
+      }
+    } else if (flying) {
+      if (!isRot) {
+        const vl = Math.hypot(V.x, V.y);
+        arrow(ctx, q.x, q.y, q.x + V.x / vl * 45, q.y - V.y / vl * 45, { color: COL.v, w: 3, label: 'v（不變）', lo: 30, size: 13 });
+        txt(ctx, '沒有力 → 走直線', C, S.H - 18, { color: '#7dd3fc', size: 14 });
+      } else {
+        if (r < R) arrow(ctx, q.x, q.y, q.x + (q.x - C) / r * 45, q.y + (q.y - C) / r * 45, { color: COL.f, w: 3, dash: true, label: '離心力？', lo: 26, size: 13 });
+        txt(ctx, '看起來「被甩出去」', C, S.H - 18, { color: COL.purple, size: 14 });
+      }
+    }
+    dot(ctx, q.x, q.y, 10, COL.ball, '#fff');
+  }
+  setCap();
+  register([Gs.c, Rs.c], dt => {
+    t += dt;
+    if (cut && flying) {
+      const p = puckWorld();
+      if (Math.hypot(p.x, p.y) > 215) flying = false;
+      else { gTrail.push(p); rTrail.push(rot(p, -w * t)); }
+    }
+    drawView(Gs, false); drawView(Rs, true);
+  });
+})();
+
+/* ================= 第 5 站之三：洗衣機 ================= */
+(function () {
+  const { c, ctx, W, H } = setup('cv-washer');
+  const C = { x: 450, y: 190 }, R = 130, TUB = 172, w = 1.4;
+  let t = 0, view = 'ground', drops = [], spawn = 0;
+  const CLOTHES = [0.2, 2.3, 4.3];
+  const cap = $('washer-cap');
+  const CAPS = {
+    ground: '<span class="text-sky-300">🎥 地面攝影機：</span>筒壁從外側把衣服往內推（紅色，<strong>筒壁演向心力</strong>），衣服才跟著轉圈。水滴從洞口出去後，沒有東西推它，就沿<strong>切線直直飛</strong>（每條藍線都是直的）。水不是「被甩出去」，是「沒有東西拉住它」。',
+    drum: '<span class="text-purple-300">🌀 洗衣槽攝影機：</span>洗衣槽看起來不動，水滴卻像被一股力往外「甩」，路線還彎彎的。這股往外的力找不到施力者，是跟著洗衣槽一起轉才看到的<strong>假想力（離心力）</strong>。'
+  };
+  document.querySelectorAll('[data-wview]').forEach(b => b.onclick = () => { selectIn('[data-wview]', b); view = b.dataset.wview; cap.innerHTML = CAPS[view]; drops.forEach(d => d.trail = []); });
+  cap.innerHTML = CAPS.ground;
+  const rot = (p, a) => ({ x: p.x * Math.cos(a) - p.y * Math.sin(a), y: p.x * Math.sin(a) + p.y * Math.cos(a) });
+  const toC = p => ({ x: C.x + p.x, y: C.y - p.y });
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const ang = view === 'ground' ? w * t : 0;
+    ring(ctx, C.x, C.y, TUB, '#475569', 6);
+    txt(ctx, '外桶（不轉）', C.x + TUB + 12, C.y - TUB + 10, { align: 'left', color: COL.dim, size: 13 });
+    txt(ctx, view === 'drum' ? '🌀 攝影機跟著洗衣槽一起轉' : '🎥 攝影機架在地上不動', 20, 24, { align: 'left', color: view === 'drum' ? COL.purple : '#7dd3fc', size: 14 });
+    txt(ctx, '俯視圖｜灰色虛線圈＝會轉的洗衣槽（缺口是小洞）', 20, H - 18, { align: 'left', color: COL.dim, size: 13 });
+    ring(ctx, C.x, C.y, R, '#94a3b8', 5);
+    for (let i = 0; i < 24; i++) { const p = toC(rot({ x: R, y: 0 }, ang + i * Math.PI / 12)); dot(ctx, p.x, p.y, 3, '#020617'); }
+    CLOTHES.forEach((a0, i) => {
+      const p = toC(rot({ x: R - 16, y: 0 }, ang + a0));
+      ctx.save(); ctx.fillStyle = ['#f472b6', '#a78bfa', '#34d399'][i]; ctx.beginPath(); ctx.ellipse(p.x, p.y, 16, 11, -(ang + a0), 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      if (i === 0) {
+        const wallP = toC(rot({ x: R - 2, y: 0 }, ang + a0)), inP = toC(rot({ x: R - 70, y: 0 }, ang + a0));
+        arrow(ctx, wallP.x, wallP.y, inP.x, inP.y, { color: COL.f, w: 4, label: '筒壁推力', lo: 30, size: 13 });
+      }
+    });
+    drops.forEach(d => {
+      const tr = d.trail.map(toC);
+      polyline(ctx, tr, view === 'ground' ? COL.v : COL.purple, 2, null, Math.max(0, d.life));
+      let p = view === 'ground' ? d.p : rot(d.p, -w * t); p = toC(p);
+      dot(ctx, p.x, p.y, 3.5, '#7dd3fc');
+    });
+  }
+  register([c], dt => {
+    t += dt; spawn -= dt;
+    if (spawn <= 0) {
+      spawn = 0.18;
+      const a0 = CLOTHES[Math.floor(Math.random() * 3)] + w * t + (Math.random() - 0.5) * 0.3;
+      const p = rot({ x: R, y: 0 }, a0), v = rot({ x: 6, y: w * R }, a0);
+      drops.push({ p, v, life: 1, stop: false, trail: [] });
+    }
+    drops.forEach(d => {
+      if (!d.stop) { d.p = { x: d.p.x + d.v.x * dt, y: d.p.y + d.v.y * dt }; if (Math.hypot(d.p.x, d.p.y) >= TUB - 4) d.stop = true; }
+      else d.life -= dt * 1.2;
+      const sp = view === 'ground' ? d.p : rot(d.p, -w * t);
+      d.trail.push(sp); if (d.trail.length > 40) d.trail.shift();
+    });
+    drops = drops.filter(d => d.life > 0);
+    draw();
+  });
+})();
+
+/* ================= 第 6 站：小測驗 ================= */
+(function () {
+  const Q = [
+    { q: '用繩子綁著球，在水平桌面上繞圈（俯視）。繩子突然斷掉，球會怎麼運動？',
+      o: ['沿半徑方向往外飛', '沿斷掉那一點的切線方向直線前進', '繼續繞著圓圈走，慢慢變大圈', '立刻停下來'], a: 1,
+      e: '斷掉後沒有力，球照慣性維持「當下的速度」，速度方向就是切線方向。' },
+    { q: '地球繞太陽公轉，擔任「向心力」的是哪一個力？',
+      o: ['地球自轉產生的力', '太陽對地球的萬有引力', '離心力', '太陽光的推力'], a: 1,
+      e: '向心力是角色，演員是「太陽對地球的萬有引力」，方向指向太陽（圓心）。' },
+    { q: '用繩子甩球在水平面繞圈（俯視，不考慮重力）。站在地面看，球的受力圖應該怎麼畫？',
+      o: ['只有一支指向圓心的繩子拉力', '一支指向圓心的拉力，加一支向外的離心力', '一支指向圓心的拉力，加一支沿切線方向的力', '一支沿切線方向的力'], a: 0,
+      e: '受力圖只畫真的力。離心力找不到施力者；切線方向也沒有任何東西在推球。' },
+    { q: '小明說：「向心力和離心力大小相等、方向相反，是一對作用力與反作用力。」這句話對嗎？',
+      o: ['對，因為它們大小相等方向相反', '不對，作用力與反作用力作用在不同物體上，而且離心力找不到施力者', '對，所以球才會維持在圓上', '不對，因為向心力比較大'], a: 1,
+      e: '繩子拉球的反作用力是「球拉繩子」，作用在繩子上。離心力是假想力，不是誰的反作用力。' },
+    { q: '洗衣機脫水時，水會離開衣服，最主要的原因是？',
+      o: ['離心力把水往外推', '筒壁擋住衣服讓衣服轉彎，但沒有東西拉住水，水就沿切線直走、穿過小洞', '水比衣服重', '洗衣機會把水抽走'], a: 1,
+      e: '從地面看，沒有往外推的力。是「沒有力讓水轉彎」，水照慣性直走。' },
+    { q: '⭐ 挑戰：同一顆球做圓周運動，速率變成原來的 2 倍，半徑變成原來的一半，需要的向心力變成原來的幾倍？',
+      o: ['1 倍', '2 倍', '4 倍', '8 倍'], a: 3,
+      e: '速率 2 倍 → 力 ×4；半徑一半 → 力 ×2。合起來 4×2＝8 倍（F＝mv²/r）。' }
+  ];
+  const box = $('quiz'); let done = 0, right = 0;
+  Q.forEach((it, i) => {
+    const d = document.createElement('div');
+    d.className = 'p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3';
+    d.innerHTML = `<div class="font-bold">${i + 1}. ${it.q}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${it.o.map((o, j) => `<button class="btn !justify-start text-left" data-j="${j}">(${'ABCD'[j]}) ${o}</button>`).join('')}</div><div class="fb text-sm text-slate-300"></div>`;
+    let answered = false;
+    d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+      if (answered) return; answered = true; done++;
+      const j = +b.dataset.j, ok = j === it.a; if (ok) right++;
+      d.querySelectorAll('[data-j]').forEach(x => { if (+x.dataset.j === it.a) x.classList.add('right'); });
+      if (!ok) b.classList.add('wrong');
+      d.querySelector('.fb').innerHTML = (ok ? '✅ 正確！' : `❌ 正確答案是 (${'ABCD'[it.a]})。`) + it.e;
+      $('quiz-score').textContent = done === Q.length ? `全部完成：答對 ${right} / ${Q.length} 題 ${right === Q.length ? '🎉 全對！' : '，錯的題目回到對應的站再看一次動畫。'}` : `已作答 ${done} / ${Q.length}`;
+    });
+    box.appendChild(d);
+  });
+  $('quiz-score').textContent = `已作答 0 / ${Q.length}`;
+})();
+
+if (window.lucide) lucide.createIcons();
+</script>
+</body>
+</html>
